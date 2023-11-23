@@ -1,0 +1,34 @@
+CREATE TABLE nepremicnine(
+id integer PRIMARY KEY AUTOINCREMENT,
+Prodajalec text NOT NULL,
+Cena integer NOT NULL CHECK (Cena > 0),
+Vrsta text,
+Lokacija text NOT NULL,
+Opis text
+);
+
+CREATE TABLE kupec(
+id integer PRIMARY KEY AUTOINCREMENT,
+ime text NOT NULL,
+kontakt text NOT NULL,
+Cena integer NOT NULL CHECK (Cena > 0),
+Lokacija text NOT NULL
+);
+
+CREATE TABLE agent(
+id integer PRIMARY KEY AUTOINCREMENT,
+ime text NOT NULL,
+kontakt text NOT NULL
+);
+
+CREATE TABLE zastopa(
+id_kupec integer REFERENCES kupec(id),
+id_agent integer REFERENCES agent(id),
+PRIMARY KEY (id_kupec, id_agent)
+);
+
+CREATE TABLE interes(
+id_kupec integer REFERENCES kupec(id),
+id_nepremicnine integer REFERENCES nepremicnine(id),
+PRIMARY KEY (id_kupec, id_nepremicnine)
+);
