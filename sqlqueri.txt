@@ -18,7 +18,9 @@ Lokacija text NOT NULL
 CREATE TABLE agent(
 id integer PRIMARY KEY AUTOINCREMENT,
 ime text NOT NULL,
-kontakt text NOT NULL
+kontakt text NOT NULL,
+geslo text NOT NULL,
+naziv integer
 );
 
 CREATE TABLE zastopa(

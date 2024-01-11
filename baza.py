@@ -78,29 +78,31 @@ class Tabela:
         """
         podatki = {kljuc: vrednost for kljuc, vrednost in podatki.items()
                    if vrednost is not None}
+        print(podatki)
         poizvedba = self.dodajanje(podatki.keys())
         cur = self.conn.execute(poizvedba, podatki)
         return cur.lastrowid
 
 
-class Uporabnik(Tabela):
+class Agenti(Tabela):
     """
     Tabela za uporabnike.
     """
-    ime = "uporabnik"
-    podatki = "podatki/uporabnik.csv"
+    ime = "Agenti"
+    podatki = "podatki/Agenti.csv"
 
     def ustvari(self):
         """
         Ustvari tabelo uporabnik.
         """
         self.conn.execute("""
-            CREATE TABLE uporabnik (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                ime       TEXT NOT NULL UNIQUE,
-                zgostitev TEXT NOT NULL,
-                sol       TEXT NOT NULL
-            )
+            CREATE TABLE agent(
+            id integer PRIMARY KEY AUTOINCREMENT,
+            ime text NOT NULL,
+            kontakt text NOT NULL,
+            geslo text NOT NULL,
+            naziv integer NOT NULL
+            );
         """)
 
     def dodaj_vrstico(self, **podatki):
@@ -112,216 +114,215 @@ class Uporabnik(Tabela):
         Argumenti:
         - poimenovani parametri: vrednosti v ustreznih stolpcih
         """
-        if podatki.get("sol", None) is None and podatki.get("zgostitev", None) is not None:
-            podatki["zgostitev"], podatki["sol"] = sifriraj_geslo(podatki["zgostitev"])
+
         return super().dodaj_vrstico(**podatki)
 
 
-class Zanr(Tabela):
-    """
-    Tabela za žanre.
-    """
-    ime = "zanr"
+# class Zanr(Tabela):
+#     """
+#     Tabela za žanre.
+#     """
+#     ime = "zanr"
 
-    def ustvari(self):
-        """
-        Ustvari tabelo zanr.
-        """
-        self.conn.execute("""
-            CREATE TABLE zanr (
-                id    INTEGER PRIMARY KEY AUTOINCREMENT,
-                naziv TEXT UNIQUE
-            );
-        """)
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo zanr.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE zanr (
+#                 id    INTEGER PRIMARY KEY AUTOINCREMENT,
+#                 naziv TEXT UNIQUE
+#             );
+#         """)
 
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj žanr.
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj žanr.
 
-        Če žanr že obstaja, vrne obstoječi ID.
+#         Če žanr že obstaja, vrne obstoječi ID.
 
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
-        assert "naziv" in podatki
-        cur = self.conn.execute("""
-            SELECT id FROM zanr
-            WHERE naziv = :naziv;
-        """, podatki)
-        r = cur.fetchone()
-        if r is None:
-            return super().dodaj_vrstico(**podatki)
-        else:
-            id, = r
-            return id
-
-
-class Oznaka(Tabela):
-    """
-    Tabela za oznake.
-    """
-    ime = "oznaka"
-
-    def ustvari(self):
-        """
-        Ustvari tabelo oznaka.
-        """
-        self.conn.execute("""
-            CREATE TABLE oznaka (
-                kratica TEXT PRIMARY KEY
-            );
-        """)
-
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj oznako.
-
-        Če oznaka že obstaja, je ne dodamo še enkrat.
-
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
-        assert "kratica" in podatki
-        cur = self.conn.execute("""
-            SELECT kratica FROM oznaka
-            WHERE kratica = :kratica;
-        """, podatki)
-        r = cur.fetchone()
-        if r is None:
-            return super().dodaj_vrstico(**podatki)
+#         Argumenti:
+#         - poimenovani parametri: vrednosti v ustreznih stolpcih
+#         """
+#         assert "naziv" in podatki
+#         cur = self.conn.execute("""
+#             SELECT id FROM zanr
+#             WHERE naziv = :naziv;
+#         """, podatki)
+#         r = cur.fetchone()
+#         if r is None:
+#             return super().dodaj_vrstico(**podatki)
+#         else:
+#             id, = r
+#             return id
 
 
-class Film(Tabela):
-    """
-    Tabela za filme.
-    """
-    ime = "film"
-    podatki = "podatki/film.csv"
+# class Oznaka(Tabela):
+#     """
+#     Tabela za oznake.
+#     """
+#     ime = "oznaka"
 
-    def __init__(self, conn, oznaka):
-        """
-        Konstruktor tabele filmov.
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo oznaka.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE oznaka (
+#                 kratica TEXT PRIMARY KEY
+#             );
+#         """)
 
-        Argumenti:
-        - conn: povezava na bazo
-        - oznaka: tabela za oznake
-        """
-        super().__init__(conn)
-        self.oznaka = oznaka
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj oznako.
 
-    def ustvari(self):
-        """
-        Ustavari tabelo film.
-        """
-        self.conn.execute("""
-            CREATE TABLE film (
-                id        INTEGER PRIMARY KEY,
-                naslov    TEXT,
-                dolzina   INTEGER,
-                leto      INTEGER,
-                ocena     REAL,
-                metascore INTEGER,
-                glasovi   INTEGER,
-                zasluzek  INTEGER,
-                oznaka    TEXT    REFERENCES oznaka (kratica),
-                opis      TEXT
-            );
-        """)
+#         Če oznaka že obstaja, je ne dodamo še enkrat.
 
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj film in pripadajočo oznako.
-
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
-        if podatki.get("oznaka", None) is not None:
-            self.oznaka.dodaj_vrstico(kratica=podatki["oznaka"])
-        return super().dodaj_vrstico(**podatki)
+#         Argumenti:
+#         - poimenovani parametri: vrednosti v ustreznih stolpcih
+#         """
+#         assert "kratica" in podatki
+#         cur = self.conn.execute("""
+#             SELECT kratica FROM oznaka
+#             WHERE kratica = :kratica;
+#         """, podatki)
+#         r = cur.fetchone()
+#         if r is None:
+#             return super().dodaj_vrstico(**podatki)
 
 
-class Oseba(Tabela):
-    """
-    Tabela za osebe.
-    """
-    ime = "oseba"
-    podatki = "podatki/oseba.csv"
+# class Film(Tabela):
+#     """
+#     Tabela za filme.
+#     """
+#     ime = "film"
+#     podatki = "podatki/film.csv"
 
-    def ustvari(self):
-        """
-        Ustvari tabelo oseba.
-        """
-        self.conn.execute("""
-            CREATE TABLE oseba (
-                id  INTEGER PRIMARY KEY,
-                ime TEXT
-            );
-        """)
+#     def __init__(self, conn, oznaka):
+#         """
+#         Konstruktor tabele filmov.
+
+#         Argumenti:
+#         - conn: povezava na bazo
+#         - oznaka: tabela za oznake
+#         """
+#         super().__init__(conn)
+#         self.oznaka = oznaka
+
+#     def ustvari(self):
+#         """
+#         Ustavari tabelo film.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE film (
+#                 id        INTEGER PRIMARY KEY,
+#                 naslov    TEXT,
+#                 dolzina   INTEGER,
+#                 leto      INTEGER,
+#                 ocena     REAL,
+#                 metascore INTEGER,
+#                 glasovi   INTEGER,
+#                 zasluzek  INTEGER,
+#                 oznaka    TEXT    REFERENCES oznaka (kratica),
+#                 opis      TEXT
+#             );
+#         """)
+
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj film in pripadajočo oznako.
+
+#         Argumenti:
+#         - poimenovani parametri: vrednosti v ustreznih stolpcih
+#         """
+#         if podatki.get("oznaka", None) is not None:
+#             self.oznaka.dodaj_vrstico(kratica=podatki["oznaka"])
+#         return super().dodaj_vrstico(**podatki)
 
 
-class Vloga(Tabela):
-    """
-    Tabela za vloge.
-    """
-    ime = "vloga"
-    podatki = "podatki/vloga.csv"
+# class Oseba(Tabela):
+#     """
+#     Tabela za osebe.
+#     """
+#     ime = "oseba"
+#     podatki = "podatki/oseba.csv"
 
-    def ustvari(self):
-        """
-        Ustvari tabelo vloga.
-        """
-        self.conn.execute("""
-            CREATE TABLE vloga (
-                film  INTEGER   REFERENCES film (id),
-                oseba INTEGER   REFERENCES oseba (id),
-                tip   CHARACTER CHECK (tip IN ('I', 'R')),
-                mesto INTEGER,
-                PRIMARY KEY (film, oseba, tip)
-            );
-        """)
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo oseba.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE oseba (
+#                 id  INTEGER PRIMARY KEY,
+#                 ime TEXT
+#             );
+#         """)
 
 
-class Pripada(Tabela):
-    """
-    Tabela za relacijo pripadnosti filma žanru.
-    """
-    ime = "pripada"
-    podatki = "podatki/zanr.csv"
+# class Vloga(Tabela):
+#     """
+#     Tabela za vloge.
+#     """
+#     ime = "vloga"
+#     podatki = "podatki/vloga.csv"
 
-    def __init__(self, conn, zanr):
-        """
-        Konstruktor tabele pripadnosti žanrom.
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo vloga.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE vloga (
+#                 film  INTEGER   REFERENCES film (id),
+#                 oseba INTEGER   REFERENCES oseba (id),
+#                 tip   CHARACTER CHECK (tip IN ('I', 'R')),
+#                 mesto INTEGER,
+#                 PRIMARY KEY (film, oseba, tip)
+#             );
+#         """)
 
-        Argumenti:
-        - conn: povezava na bazo
-        - zanr: tabela za žanre
-        """
-        super().__init__(conn)
-        self.zanr = zanr
 
-    def ustvari(self):
-        """
-        Ustvari tabelo pripada.
-        """
-        self.conn.execute("""
-            CREATE TABLE pripada (
-                film INTEGER REFERENCES film (id),
-                zanr INTEGER REFERENCES zanr (id),
-                PRIMARY KEY (film, zanr)
-            );
-        """)
+# class Pripada(Tabela):
+#     """
+#     Tabela za relacijo pripadnosti filma žanru.
+#     """
+#     ime = "pripada"
+#     podatki = "podatki/zanr.csv"
 
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj pripadnost filma in pripadajoči žanr.
+#     def __init__(self, conn, zanr):
+#         """
+#         Konstruktor tabele pripadnosti žanrom.
 
-        Argumenti:
-        - podatki: slovar s podatki o pripadnosti
-        """
-        if podatki.get("naziv", None) is not None:
-            podatki["zanr"] = self.zanr.dodaj_vrstico(naziv=podatki["naziv"])
-            del podatki["naziv"]
-        return super().dodaj_vrstico(**podatki)
+#         Argumenti:
+#         - conn: povezava na bazo
+#         - zanr: tabela za žanre
+#         """
+#         super().__init__(conn)
+#         self.zanr = zanr
+
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo pripada.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE pripada (
+#                 film INTEGER REFERENCES film (id),
+#                 zanr INTEGER REFERENCES zanr (id),
+#                 PRIMARY KEY (film, zanr)
+#             );
+#         """)
+
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj pripadnost filma in pripadajoči žanr.
+
+#         Argumenti:
+#         - podatki: slovar s podatki o pripadnosti
+#         """
+#         if podatki.get("naziv", None) is not None:
+#             podatki["zanr"] = self.zanr.dodaj_vrstico(naziv=podatki["naziv"])
+#             del podatki["naziv"]
+#         return super().dodaj_vrstico(**podatki)
 
 
 def ustvari_tabele(tabele):
@@ -370,15 +371,15 @@ def pripravi_tabele(conn):
     """
     Pripravi objekte za tabele.
     """
-    uporabnik = Uporabnik(conn)
-    zanr = Zanr(conn)
-    oznaka = Oznaka(conn)
-    film = Film(conn, oznaka)
-    oseba = Oseba(conn)
-    vloga = Vloga(conn)
-    pripada = Pripada(conn, zanr)
-    return [uporabnik, zanr, oznaka, film, oseba, vloga, pripada]
-
+    uporabnik = Agenti(conn)
+    # zanr = Zanr(conn)
+    # oznaka = Oznaka(conn)
+    # film = Film(conn, oznaka)
+    # oseba = Oseba(conn)
+    # vloga = Vloga(conn)
+    # pripada = Pripada(conn, zanr)
+    # return [uporabnik, zanr, oznaka, film, oseba, vloga, pripada]
+    return [uporabnik]
 
 def ustvari_bazo_ce_ne_obstaja(conn):
     """
@@ -388,3 +389,5 @@ def ustvari_bazo_ce_ne_obstaja(conn):
         cur = conn.execute("SELECT COUNT(*) FROM sqlite_master")
         if cur.fetchone() == (0, ):
             ustvari_bazo(conn)
+
+
