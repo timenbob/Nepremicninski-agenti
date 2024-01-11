@@ -1,0 +1,23 @@
+% rebase('osnova.html')
+<section class="hero">
+    <div class="hero-body">
+        
+        <div class="container">
+            <h1 class="title">
+                Nepremičninski agent
+            </h1>
+        </div>
+    </div>
+</section>
+<div>
+    Prijava
+</div>
+<div>
+    % if ime:
+        Prijavljen uporabnik: {{ime}}
+        (<a href="/odjava/">odjava</a>)
+    % else:
+    <a href="/prijava/">prijava</a> | 
+    <a href="/vpis/">vpis</a>
+    % end
+</div>
