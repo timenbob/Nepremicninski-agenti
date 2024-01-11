@@ -10,8 +10,6 @@ class Tabela:
 
     def __init__(self, conn, ime = None, podatki = None):
         self.conn = conn
-        self.ime = ime
-        self.podatki = podatki
 
     def ustvari(self):
         """zdej nic ne dela, pol ustvarimo za vsak razred za se"""
@@ -68,7 +66,7 @@ class Agenti(Tabela):
     """
     Tabela za uporabnike.
     """
-    ime = "agenti"
+    ime = "agent"
     podatki = "podatki/agenti.csv"
 
     def ustvari(self):
@@ -95,10 +93,10 @@ class Agenti(Tabela):
         - poimenovani parametri: vrednosti v ustreznih stolpcih
         """
 
-        assert "ime" in podatki
+        assert "id" in podatki
         cur = self.conn.execute("""
-            SELECT id FROM agenti
-            WHERE ime = :ime;
+            SELECT id FROM agent
+            WHERE id = :id;
         """, podatki)
         r = cur.fetchone()
         if r is None:
@@ -123,12 +121,13 @@ class Kupci(Tabela):
         Ustvari tabelo uporabnik.
         """
         self.conn.execute("""
-            CREATE TABLE kupec(
+            CREATE TABLE kupci(
             id integer PRIMARY KEY AUTOINCREMENT,
             ime text NOT NULL,
             kontakt text NOT NULL,
-            Cena integer NOT NULL CHECK (Cena > 0),
-            Lokacija text NOT NULL
+            buget integer NOT NULL CHECK (buget > 0),
+            lokacija text NOT NULL,
+            vrsta text NOT NULL
             );
         """)
 
@@ -146,112 +145,112 @@ class Kupci(Tabela):
         - poimenovani parametri: vrednosti v ustreznih stolpcih
         """
 
-        assert "ime" in podatki
+        assert "id" in podatki
         cur = self.conn.execute("""
-            SELECT id FROM agenti
-            WHERE ime = :ime;
+            SELECT id FROM kupci
+            WHERE id = :id;
         """, podatki)
         r = cur.fetchone()
         if r is None:
             return super().dodaj_vrstico(**podatki)
 
-class Nepremicnine(Tabela):
-    """
-    Tabela za nepremicnine.
-    """
-    ime = "nepremicnine"
-    podatki = "podatki/nepremicnine.csv"
+# class Nepremicnine(Tabela):
+#     """
+#     Tabela za nepremicnine.
+#     """
+#     ime = "nepremicnine"
+#     podatki = "podatki/nepremicnine.csv"
 
-    def ustvari(self):
-        """
-        Ustvari tabelo uporabnik.
-        """
-        self.conn.execute("""
-            CREATE TABLE nepremicnine(
-            id integer PRIMARY KEY AUTOINCREMENT,
-            Prodajalec text NOT NULL,
-            Cena integer NOT NULL CHECK (Cena > 0),
-            Vrsta text,
-            Lokacija text NOT NULL,
-            Opis text
-            );
-        """)
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo uporabnik.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE nepremicnine(
+#             id integer PRIMARY KEY AUTOINCREMENT,
+#             Prodajalec text NOT NULL,
+#             Cena integer NOT NULL CHECK (Cena > 0),
+#             Vrsta text,
+#             Lokacija text NOT NULL,
+#             Opis text
+#             );
+#         """)
 
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj uporabnika.
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj uporabnika.
 
-        Če sol ni podana, zašifrira podano geslo.
+#         Če sol ni podana, zašifrira podano geslo.
 
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
+#         Argumenti:
+#         - poimenovani parametri: vrednosti v ustreznih stolpcih
+#         """
 
-        assert "ime" in podatki
-        cur = self.conn.execute("""
-            SELECT id FROM agenti
-            WHERE ime = :ime;
-        """, podatki)
-        r = cur.fetchone()
-        if r is None:
-            return super().dodaj_vrstico(**podatki)
+#         assert "ime" in podatki
+#         cur = self.conn.execute("""
+#             SELECT id FROM agenti
+#             WHERE ime = :ime;
+#         """, podatki)
+#         r = cur.fetchone()
+#         if r is None:
+#             return super().dodaj_vrstico(**podatki)
 
-class Zastopa(Tabela):
-    """
-    Tabela kdo zastopa koga - agenti/kljenti.
-    """
-    ime = "zastopa"
-    podatki = "podatki/zastopa.csv"
-
-
-    # def __init__(self, conn, oznaka):
-    #     ''''''
-
-    #     super().__init__(conn)
-    #     self.oznaka = oznaka
+# class Zastopa(Tabela):
+#     """
+#     Tabela kdo zastopa koga - agenti/kljenti.
+#     """
+#     ime = "zastopa"
+#     podatki = "podatki/zastopa.csv"
 
 
-    def ustvari(self):
-        """
-        Ustvari tabelo uporabnik.
-        """
-        self.conn.execute("""
-            CREATE TABLE zastopa(
-            id_kupec integer REFERENCES kupec(id),
-            id_agent integer REFERENCES agent(id),
-            PRIMARY KEY (id_kupec, id_agent)
-            );
-        """)
+#     # def __init__(self, conn, oznaka):
+#     #     ''''''
 
-    def dodaj_vrstico(self, **podatki):
-        """
-        Dodaj uporabnika.
+#     #     super().__init__(conn)
+#     #     self.oznaka = oznaka
 
-        Če sol ni podana, zašifrira podano geslo.
 
-        Argumenti:
-        - poimenovani parametri: vrednosti v ustreznih stolpcih
-        """
-        return
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo uporabnik.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE zastopa(
+#             id_kupec integer REFERENCES kupec(id),
+#             id_agent integer REFERENCES agent(id),
+#             PRIMARY KEY (id_kupec, id_agent)
+#             );
+#         """)
+
+#     def dodaj_vrstico(self, **podatki):
+#         """
+#         Dodaj uporabnika.
+
+#         Če sol ni podana, zašifrira podano geslo.
+
+#         Argumenti:
+#         - poimenovani parametri: vrednosti v ustreznih stolpcih
+#         """
+#         return
     
-class Interes(Tabela):
-    """
-    Tabela kdo zastopa koga - agenti/kljenti.
-    """
-    ime = "interes"
-    #podatki = "podatki/zastopa.csv"
+# class Interes(Tabela):
+#     """
+#     Tabela kdo zastopa koga - agenti/kljenti.
+#     """
+#     ime = "interes"
+#     #podatki = "podatki/zastopa.csv"
 
-    def ustvari(self):
-        """
-        Ustvari tabelo uporabnik.
-        """
-        self.conn.execute("""
-            CREATE TABLE interes(
-            id_kupec integer REFERENCES kupec(id),
-            id_nepremicnine integer REFERENCES nepremicnine(id),
-            PRIMARY KEY (id_kupec, id_nepremicnine)
-            );
-        """)
+#     def ustvari(self):
+#         """
+#         Ustvari tabelo uporabnik.
+#         """
+#         self.conn.execute("""
+#             CREATE TABLE interes(
+#             id_kupec integer REFERENCES kupec(id),
+#             id_nepremicnine integer REFERENCES nepremicnine(id),
+#             PRIMARY KEY (id_kupec, id_nepremicnine)
+#             );
+#         """)
 
 
 def ustvari_tabele(tabele):
@@ -291,6 +290,7 @@ def ustvari_bazo(conn):
     Izvede ustvarjanje baze.
     """
     tabele = pripravi_tabele(conn)
+    print(tabele)
     izbrisi_tabele(tabele)
     ustvari_tabele(tabele)
     uvozi_podatke(tabele)
@@ -302,10 +302,10 @@ def pripravi_tabele(conn):
     """
     agenti = Agenti(conn)
     kupci = Kupci(conn)
-    nepremicnine = Nepremicnine(conn)
-    zastopa = Zastopa(conn)
-    interes = Interes(conn)
-    return [agenti, kupci, nepremicnine, zastopa, interes]
+    # nepremicnine = Nepremicnine(conn)
+    # zastopa = Zastopa(conn)
+    # interes = Interes(conn)
+    return [agenti, kupci] #, nepremicnine, zastopa, interes]
 
 def ustvari_bazo_ce_ne_obstaja(conn):
     """
@@ -313,7 +313,7 @@ def ustvari_bazo_ce_ne_obstaja(conn):
     """
     with conn:
         cur = conn.execute("SELECT COUNT(*) FROM sqlite_master")
-        if cur.fetchone() == (0, ):
-            ustvari_bazo(conn)
+        #if cur.fetchone() == (0, ):
+        ustvari_bazo(conn)
 
 
