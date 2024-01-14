@@ -154,86 +154,75 @@ class Kupci(Tabela):
         if r is None:
             return super().dodaj_vrstico(**podatki)
 
-# class Nepremicnine(Tabela):
-#     """
-#     Tabela za nepremicnine.
-#     """
-#     ime = "nepremicnine"
-#     podatki = "podatki/nepremicnine.csv"
+class Nepremicnine(Tabela):
+     """
+     Tabela za nepremicnine.
+     """
+     ime = "nepremicnine"
+     podatki = "podatki/nepremicnine.csv"
 
-#     def ustvari(self):
-#         """
-#         Ustvari tabelo uporabnik.
-#         """
-#         self.conn.execute("""
-#             CREATE TABLE nepremicnine(
-#             id integer PRIMARY KEY AUTOINCREMENT,
-#             Prodajalec text NOT NULL,
-#             Cena integer NOT NULL CHECK (Cena > 0),
-#             Vrsta text,
-#             Lokacija text NOT NULL,
-#             Opis text
-#             );
-#         """)
+     def ustvari(self):
+         """
+         Ustvari tabelo uporabnik.
+         """
+         self.conn.execute("""
+             CREATE TABLE nepremicnine(
+             id integer PRIMARY KEY AUTOINCREMENT,
+             lastnik text NOT NULL,
+             cena integer NOT NULL CHECK (Cena > 0),
+             vrsta text,
+             lokacija text NOT NULL
+             );
+         """)
 
-#     def dodaj_vrstico(self, **podatki):
-#         """
-#         Dodaj uporabnika.
+     def dodaj_vrstico(self, **podatki):
+         """
+         Dodaj uporabnika.
 
-#         Če sol ni podana, zašifrira podano geslo.
+         Če sol ni podana, zašifrira podano geslo.
 
-#         Argumenti:
-#         - poimenovani parametri: vrednosti v ustreznih stolpcih
-#         """
+         Argumenti:
+         - poimenovani parametri: vrednosti v ustreznih stolpcih
+         """
 
-#         assert "ime" in podatki
-#         cur = self.conn.execute("""
-#             SELECT id FROM agenti
-#             WHERE ime = :ime;
-#         """, podatki)
-#         r = cur.fetchone()
-#         if r is None:
-#             return super().dodaj_vrstico(**podatki)
+         assert "id" in podatki
+         cur = self.conn.execute("""
+             SELECT id FROM nepremicnine
+             WHERE id = :id;
+         """, podatki)
+         r = cur.fetchone()
+         if r is None:
+             return super().dodaj_vrstico(**podatki)
 
-# class Zastopa(Tabela):
-#     """
-#     Tabela kdo zastopa koga - agenti/kljenti.
-#     """
-#     ime = "zastopa"
-#     podatki = "podatki/zastopa.csv"
-
-
-#     # def __init__(self, conn, oznaka):
-#     #     ''''''
-
-#     #     super().__init__(conn)
-#     #     self.oznaka = oznaka
+class Zastopa(Tabela):
+     """
+     Tabela kdo zastopa koga - agenti/kljenti.
+     """
+     ime = "zastopa"
+     podatki = "podatki/zastopa.csv"
 
 
-#     def ustvari(self):
-#         """
-#         Ustvari tabelo uporabnik.
-#         """
-#         self.conn.execute("""
-#             CREATE TABLE zastopa(
-#             id_kupec integer REFERENCES kupec(id),
-#             id_agent integer REFERENCES agent(id),
-#             PRIMARY KEY (id_kupec, id_agent)
-#             );
-#         """)
+     def __init__(self, conn, oznaka):
+         ''''''
 
-#     def dodaj_vrstico(self, **podatki):
-#         """
-#         Dodaj uporabnika.
+         super().__init__(conn)
+         self.oznaka = oznaka
 
-#         Če sol ni podana, zašifrira podano geslo.
 
-#         Argumenti:
-#         - poimenovani parametri: vrednosti v ustreznih stolpcih
-#         """
-#         return
+     def ustvari(self):
+         """
+         Ustvari tabelo uporabnik.
+         """
+         self.conn.execute("""
+             CREATE TABLE zastopa(
+             id_kupec integer REFERENCES kupci(id),
+             id_agent integer REFERENCES agent(id),
+             PRIMARY KEY (id_kupec, id_agent)
+             );
+         """)
+
     
-# class Interes(Tabela):
+#class Interes(Tabela):
 #     """
 #     Tabela kdo zastopa koga - agenti/kljenti.
 #     """
@@ -302,10 +291,10 @@ def pripravi_tabele(conn):
     """
     agenti = Agenti(conn)
     kupci = Kupci(conn)
-    # nepremicnine = Nepremicnine(conn)
-    # zastopa = Zastopa(conn)
+    nepremicnine = Nepremicnine(conn)
+    zastopa = Zastopa(conn)
     # interes = Interes(conn)
-    return [agenti, kupci] #, nepremicnine, zastopa, interes]
+    return [agenti, kupci, nepremicnine, zastopa]#, interes]
 
 def ustvari_bazo_ce_ne_obstaja(conn):
     """

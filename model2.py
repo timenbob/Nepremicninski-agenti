@@ -7,8 +7,8 @@ conn = sqlite3.connect('basaaaa.db')
 baza2.ustvari_bazo_ce_ne_obstaja(conn)
 conn.execute('PRAGMA foreign_keys = ON')
 
-agenti , kupci = baza2.pripravi_tabele(conn)
-#, nepremicnine, zastopa, interes
+agenti , kupci, nepremicnine, zastopa = baza2.pripravi_tabele(conn)
+#, zastopa, interes
 
 
 
