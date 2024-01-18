@@ -219,32 +219,54 @@ class Zastopa(Tabela):
          
      def dodaj_vrstico(self, **podatki):
         """
-        Dodaj pripadnost filma in pripadajoči žanr.
+        Dodaj pripadnost filma in pripadajoči žanr.vr
 
         Argumenti:
         - podatki: slovar s podatki o pripadnosti
         """
-        self.conn.execute("""
-        return super().dodaj_vrstico(**podatki)
+        id_kupec = podatki['id_kupec']
+        id_agent = podatki['id_agent']
+        
+        neki = self.conn.execute("""
+            SELECT * FROM zastopa  
+            WHERE id_kupec = ? AND id_agent = ? 
+                    """, (id_kupec, id_agent)).fetchone()
+        
+ 
+        if neki is None:
+            return super().dodaj_vrstico(**podatki)
     
-#class Interes(Tabela):
-#     """
-#     Tabela kdo zastopa koga - agenti/kljenti.
-#     """
-#     ime = "interes"
-#     #podatki = "podatki/zastopa.csv"
+class Interes(Tabela):
+    """
+    Tabela kdo zastopa koga - agenti/kljenti.
+    """
+    ime = "interes"
 
-#     def ustvari(self):
-#         """
-#         Ustvari tabelo uporabnik.
-#         """
-#         self.conn.execute("""
-#             CREATE TABLE interes(
-#             id_kupec integer REFERENCES kupec(id),
-#             id_nepremicnine integer REFERENCES nepremicnine(id),
-#             PRIMARY KEY (id_kupec, id_nepremicnine)
-#             );
-#         """)
+    def ustvari(self):
+        """S
+        Ustvari tabelo uporabnik.
+        """
+        self.conn.execute("""
+            CREATE TABLE interes(
+            id_kupec integer REFERENCES kupec(id),
+            id_nepremicnine integer REFERENCES nepremicnine(id),
+            PRIMARY KEY (id_kupec, id_nepremicnine));
+            
+        """)
+        
+    
+    def napolni(self):
+        self.conn.execute("""
+            INSERT INTO interes (id_kupec, id_nepremicnine)
+            SELECT t1.id, t2.id
+            FROM kupci AS t1 JOIN nepremicnine AS t2 
+            ON t1.vrsta = t2.vrsta AND t1.lokacija = t2.lokacija 
+            WHERE t1.buget >= t2.cena;
+        """)
+    
+                        
+    
+    
 
 
 def ustvari_tabele(tabele):
@@ -288,6 +310,7 @@ def ustvari_bazo(conn):
     izbrisi_tabele(tabele)
     ustvari_tabele(tabele)
     uvozi_podatke(tabele)
+    tabele[-1].napolni()
 
 
 def pripravi_tabele(conn):
@@ -298,8 +321,8 @@ def pripravi_tabele(conn):
     kupci = Kupci(conn)
     nepremicnine = Nepremicnine(conn)
     zastopa = Zastopa(conn)
-    # interes = Interes(conn)
-    return [agenti, kupci, nepremicnine, zastopa]#, interes]
+    interes = Interes(conn)
+    return [agenti, kupci, nepremicnine, zastopa,interes]
 
 def ustvari_bazo_ce_ne_obstaja(conn):
     """
