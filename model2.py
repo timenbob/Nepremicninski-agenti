@@ -2,6 +2,11 @@ import baza2
 import sqlite3
 from sqlite3 import IntegrityError
 #from geslo import sifriraj_geslo, preveri_geslo
+import os
+
+if os.path.exists('basaaaa.db'):
+    os.remove('basaaaa.db')
+
 
 conn = sqlite3.connect('basaaaa.db')
 baza2.ustvari_bazo_ce_ne_obstaja(conn)

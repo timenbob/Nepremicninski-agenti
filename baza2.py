@@ -202,11 +202,7 @@ class Zastopa(Tabela):
      podatki = "podatki/zastopa.csv"
 
 
-     def __init__(self, conn, oznaka):
-         ''''''
 
-         super().__init__(conn)
-         self.oznaka = oznaka
 
 
      def ustvari(self):
@@ -220,7 +216,16 @@ class Zastopa(Tabela):
              PRIMARY KEY (id_kupec, id_agent)
              );
          """)
+         
+     def dodaj_vrstico(self, **podatki):
+        """
+        Dodaj pripadnost filma in pripadajoči žanr.
 
+        Argumenti:
+        - podatki: slovar s podatki o pripadnosti
+        """
+        self.conn.execute("""
+        return super().dodaj_vrstico(**podatki)
     
 #class Interes(Tabela):
 #     """
