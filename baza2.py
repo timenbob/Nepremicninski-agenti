@@ -332,5 +332,3 @@ def ustvari_bazo_ce_ne_obstaja(conn):
         cur = conn.execute("SELECT COUNT(*) FROM sqlite_master")
         #if cur.fetchone() == (0, ):
         ustvari_bazo(conn)
-
-
