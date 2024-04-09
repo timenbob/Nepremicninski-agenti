@@ -8,7 +8,7 @@ if os.path.exists('basaaaa.db'):
     os.remove('basaaaa.db')
 
 
-conn = sqlite3.connect('basaaaa.db')
+conn = sqlite3.connect('baza.db')
 baza2.ustvari_bazo_ce_ne_obstaja(conn)
 conn.execute('PRAGMA foreign_keys = ON')
 
