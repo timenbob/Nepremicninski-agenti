@@ -60,12 +60,15 @@ class Kupci:
 
 
 class Nepremicnine:
-    def __init__ (self,lastnik,cena,lokacija,vrsta, id):
+    def __init__ (self, id, lastnik, cena, vrsta, lokacija):
         self.id=id
         self.lastnik = lastnik
         self.cena=cena
         self.vrsta=vrsta
         self.lokacija=lokacija
+
+    def __str__(self):
+        return f'id : {self.id} : {self.lastnik}, {self.cena}, {self.lokacija}, {self.vrsta}'
 
     @staticmethod
     def f_manjse_od_cena(max_cena):
@@ -78,6 +81,32 @@ class Nepremicnine:
             """
         for id, lastnik, cena, vrsta, lokacija in conn.execute(sql, [max_cena]):
             yield Nepremicnine(id, lastnik, cena, vrsta, lokacija)
+
+    @staticmethod
+    def f_lokacija(lokacija):
+        '''vrne vse nepremicnine ki so na dani lokaciji'''
+
+        sql = """
+            SELECT id, lastnik, cena, vrsta, lokacija
+            FROM nepremicnine
+            WHERE lokacija == ?
+            """
+        for id, lastnik, cena, vrsta, lokacija in conn.execute(sql, [lokacija]):
+            yield Nepremicnine(id, lastnik, cena, vrsta, lokacija)
+
+    @staticmethod
+    def vse_lokacije():
+        """vrne seznam lokacij nepremicnin ki so v bazi"""
+
+        sql = """
+        SELECT lokacija FROM nepremicnine
+        GROUP BY lokacija;
+        """
+        lokacije = []
+        for lokacija in conn.execute(sql):
+            lokacije.append(lokacija)
+        
+        return lokacija
 
 class Zastopa:
     def __init__(self,kupec,agent):
