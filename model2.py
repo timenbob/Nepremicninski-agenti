@@ -106,7 +106,19 @@ class Nepremicnine:
         for lokacija in conn.execute(sql):
             lokacije.append(lokacija)
         
-        return lokacija
+        return lokacije
+    
+    @staticmethod
+    def f_vrsta_nepremicnine(vrsta):
+        """vrne vse nepremicnine te vrste"""
+        sql = """
+        SELECT id, lastnik, cena, vrsta, lokacija
+        FROM nepremicnine
+        WHERE vrsta == ?
+        """
+        for id, lastnik, cena, vrsta, lokacija in conn.execute(sql, [vrsta]):
+            yield Nepremicnine(id, lastnik, cena, vrsta, lokacija)
+    
 
 class Zastopa:
     def __init__(self,kupec,agent):
@@ -118,9 +130,17 @@ class Interes:
         self.kupec=kupec
         self.nepremicnina=nepremicnina
 
-for item in Nepremicnine.f_manjse_od_cena(200000):
+# for item in Nepremicnine.f_manjse_od_cena(200000):
+#     print(item)
+
+# print(Nepremicnine.vse_lokacije())
+
+# for item in Nepremicnine.f_lokacija('Ljubljana'):
+#     print(item)
+
+for item in Nepremicnine.f_vrsta_nepremicnine("house"):
     print(item)
 
 
-conn.commit()
-conn.close()
+#conn.commit()
+#conn.close()
