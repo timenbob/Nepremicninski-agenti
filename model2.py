@@ -47,6 +47,19 @@ class Agenti:
         Vrne uporabniško ime.
         """
         return self.ime
+    
+    @staticmethod
+    def geslo(ime):
+        '''vrne vse nepremicnine ki imajo ceno manjso od max_cena'''
+
+        sql = """
+            SELECT geslo
+            FROM agent
+            WHERE ime = ?
+            """
+        for geslo in conn.execute(sql, [ime]):
+            yield Agenti(geslo)
+
 
 
 class Kupci:
@@ -142,5 +155,5 @@ for item in Nepremicnine.f_vrsta_nepremicnine("house"):
     print(item)
 
 
-#conn.commit()
-#conn.close()
+conn.commit()
+conn.close()
