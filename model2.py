@@ -49,16 +49,22 @@ class Agenti:
         return self.ime
     
     @staticmethod
-    def geslo(ime):
-        '''vrne vse nepremicnine ki imajo ceno manjso od max_cena'''
-
+    def prijava(ime, geslo):
+        """
+        Preveri, ali sta uporabniško ime geslo pravilna.
+        """
         sql = """
-            SELECT geslo
-            FROM agent
+            SELECT id, zgostitev, sol FROM uporabnik
             WHERE ime = ?
-            """
-        for geslo in conn.execute(sql, [ime]):
-            yield Agenti(geslo)
+        """
+        try:
+            id, zgostitev, sol = conn.execute(sql, [ime]).fetchone()
+            if preveri_geslo(geslo, zgostitev, sol):
+                return Uporabnik(ime, id=id)
+        except TypeError:
+            pass
+        raise LoginError(ime)
+
 
 
 
