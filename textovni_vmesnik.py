@@ -37,7 +37,7 @@ class GlavniMeni(Meni):
     """
     Izbire v glavnem meniju.
     """
-    Nepremicnine  = ('Izpiši nepremicnine s ceno manjšo od ', manse_od_cene)
+    Nepremicnine  = ('Izpiši nepremicnine s ceno manjšo od: ', manse_od_cene)
     #POGLEDAL_DOBRE_FILME = ('Pogledal dobre filme', najboljsi_filmi)
     #DODAL_OSEBO = ('Dodal osebo', dodajanje_osebe)
     #DODAL_FILM = ('Dodal film', dodajanje_filma)
