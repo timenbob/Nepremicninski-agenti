@@ -79,6 +79,22 @@ class Agenti:
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
     
+    def prijava(ime, geslo):
+        """
+        Preveri, ali sta uporabniško ime geslo pravilna.
+        """
+        sql = """
+            SELECT id, zgostitev, sol FROM uporabnik
+            WHERE ime = ?
+        """
+        try:
+            id, zgostitev, sol = conn.execute(sql, [ime]).fetchone()
+            if preveri_geslo(geslo, zgostitev, sol):
+                return Uporabnik(ime, id=id)
+        except TypeError:
+            pass
+        raise LoginError(ime)
+
 
 
 

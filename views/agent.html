@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agent Dashboard</title>
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .dropdown {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Pozdravljen agent
+                </h1>
+                <div class="dropdown mt-4">
+                    <form action="/handle-form" method="post">
+                        <label for="actions" class="form-label">Izberite dejanje:</label>
+                        <select id="actions" name="actions" class="form-select mb-3">
+                            <option value="dodaj-stranko">Dodaj stranko</option>
+                            <option value="dodaj-nepremicnino">Dodaj nepremičnino</option>
+                            <option value="pregled-nepremicnine">Pregled nepremičnine</option>
+                            <option value="pregled-stranke">Pregled stranke</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Izberi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

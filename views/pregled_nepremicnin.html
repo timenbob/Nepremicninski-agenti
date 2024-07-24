@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pregled nepremičnine</title>
+</head>
+<body>
+    <h1>Pregled nepremičnine</h1>
+    <form action="/handle-pregled-nepremicnine" method="post">
+        <label for="lokacija">Izberite lokacijo:</label>
+        <select id="lokacija" name="lokacija">
+            % for lokacija in lokacije:
+                <option value="{{ lokacija }}">{{ lokacija }}</option>
+            % end
+        </select><br><br>
+        <button type="submit">Prikaži nepremičnine</button>
+    </form>
+    <!-- Display the list of properties here -->
+</body>
+</html>
