@@ -31,11 +31,13 @@
                     Pozdravljen {{ime_agent}}
                 </h1>
                 <div class="dropdown mt-4">
-                    <form action="/agent" method="post">
+                    <form action="/kupci_boss" method="post">
                         <label for="actions" class="form-label">Izberite dejanje:</label>
                         <select id="actions" name="actions" class="form-select mb-3">
-                            <option value="nepremicnine">Nepremicnine</option>
-                            <option value="kupci">Kupci</option>
+                            <option value="dodaj-stranko">Dodaj stranko</option>
+                            <option value="vsi-kupci">Vsi kupci</option>
+                            <option value="agenti-kupca">Agenti kupca</option>
+                            <option value="Nepremicnine-ki-ustrezajo">Nepremicnine, ki ustrezajo kupcu</option>
                         </select>
                         <button type="submit" class="btn btn-primary">Izberi</button>
                     </form>

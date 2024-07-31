@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>dodaj nepremicnino</title>
+    <title>dodaj agenta</title>
 </head>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -25,42 +25,40 @@
 <body>
     <section class="section">
         <div class="container">
-
             <h1 class="title" class="text-center" style="margin-top: 70px;">
                 Pozdravljen {{ime_agent}} <br>
-                Dodaj nepremičnino</h1>
-            <form method="POST" action="/dodaj-nepremicnino">
+                Dodaj Agenta</h1>
+            <form method="POST" action="/dodaj-agenta">
                 <div class="field">
-                    <label class="label">Ime lastnika</label>
+                    <label class="label">Ime</label>
                     <div class="control">
-                        <input class="input" type="text" placeholder="npr. Milica" name="lastnik" required>
+                        <input class="input" type="text" placeholder="npr. Janez" name="ime" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Cena</label>
+                    <label class="label">Kontakt</label>
                     <div class="control">
-                        <input class="input" type="number" placeholder="npr. 5000000" name="cena" required>
+                        <input class="input" type="text" placeholder="npr. 040123456" name="kontakt" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Vrsta</label>
+                    <label class="label">Geslo</label>
+                    <div class="control">
+                        <input class="input" type="password" placeholder="Vnesite geslo" name="geslo" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Naziv</label>
                     <div class="control">
                         <div class="select">
-                            <select name="vrsta" required>
-                                <option value="apartment">Apartment</option>
-                                <option value="house">House</option>
-                                <option value="land">Land</option>
+                            <select name="naziv" required>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Lokacija</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="npr. Ljubljana" name="lokacija" required>
                     </div>
                 </div>
 
@@ -72,7 +70,7 @@
 
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary">Dodaj!</button>
+                        <button class="button is-primary">Dodaj agenta</button>
                     </div>
                 </div>
             </form>
