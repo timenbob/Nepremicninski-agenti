@@ -49,21 +49,18 @@ class Agenti:
         return self.ime
     
     @staticmethod
-    def prijava(ime, geslo):
-        """
-        Preveri, ali sta uporabniško ime geslo pravilna.
-        """
+    def geslo(ime):
+        
         sql = """
-            SELECT id, zgostitev, sol FROM uporabnik
-            WHERE ime = ?
+            SELECT id,geslo,ime,naziv FROM agent
+            WHERE kontakt = ?
         """
-        try:
-            id, zgostitev, sol = conn.execute(sql, [ime]).fetchone()
-            if preveri_geslo(geslo, zgostitev, sol):
-                return Uporabnik(ime, id=id)
-        except TypeError:
-            pass
-        raise LoginError(ime)
+        geslo = conn.execute(sql, [ime]).fetchone()[1]
+        id = conn.execute(sql, [ime]).fetchone()[0]
+        agent=conn.execute(sql, [ime]).fetchone()[2]
+        naziv=conn.execute(sql, [ime]).fetchone()[3]
+        return (geslo,id,agent,naziv)
+       
 
 
 
@@ -162,4 +159,4 @@ for item in Nepremicnine.f_vrsta_nepremicnine("house"):
 
 
 conn.commit()
-conn.close()
+#conn.close()

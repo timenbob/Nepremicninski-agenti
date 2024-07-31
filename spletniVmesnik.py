@@ -1,29 +1,54 @@
 import bottle
 from model2 import Agenti, Kupci, Nepremicnine, Zastopa, Interes
+import secrets
+
+# Generate a random secret key
+secret_key = secrets.token_hex(32)
+print(secret_key) 
+
 
 
 @bottle.get('/')
 def naslovna_stran():
+    bottle.response.set_cookie("id", "", expires=0)
+
     return bottle.template('osnova.html', napaka=None)
 
 
 @bottle.route('/prijava/', method=['GET', 'POST'])
 def prijava():
     if bottle.request.method == 'POST':
-        ime = bottle.request.forms.get('uporabnisko_ime')
-        geslo1 = bottle.request.forms.get('geslo')
-        geslo2 = Agenti.geslo(ime)
+        try:
+            ime = bottle.request.forms.get('uporabnisko_ime')
+            geslo1 = bottle.request.forms.get('geslo')
+            
 
-        if geslo1==geslo2:
-            bottle.redirect('/dodaj-stranko')
-        else:
+            (geslo2,id,agent,naziv)= Agenti.geslo(ime)
+            bottle.response.set_cookie("id",id,secret=secret_key)
+
+            neki=bottle.request.get_cookie("id",secret=secret_key)
+            print(geslo1)
+            print(geslo2)
+            if geslo1==geslo2:
+                if naziv==1:
+                    return bottle.template('agent.html', ime_agent=agent)
+                elif naziv==0:
+                    return bottle.template('boss.html', ime_agent=agent)
+            else:
+                return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
+            
+        except Exception as e:
+            # Handle exceptions gracefully
+            print(f"An error occurred: {e}")
             return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
+  
     else:
         return bottle.template('prijava.html', napaka=None)
 
 
-@bottle.route('/handle-form', method='POST')
-def handle_form():
+
+@bottle.route('/agent', method='POST')
+def agent():
     selected_action = bottle.request.forms.get('actions')
 
     if selected_action == 'dodaj-stranko':
@@ -38,25 +63,26 @@ def handle_form():
         return "Invalid action selected"
 
 
+
 @bottle.route('/dodaj-stranko')
 def dodaj_stranko():
-    return bottle.template('dodaj_stranko')
+    return bottle.template('dodaj_stranko.html')
 
 
 @bottle.route('/dodaj-nepremicnino')
 def dodaj_nepremicnino():
-    return bottle.template('dodaj_nepremicnino')
+    return bottle.template('dodaj_nepremicnino.html',napaka=None)
 
 
 @bottle.route('/pregled-nepremicnine')
 def pregled_nepremicnine():
     lokacije = Nepremicnine.vse_lokacije()
-    return bottle.template('pregled_nepremicnine', lokacije=lokacije)
+    return bottle.template('pregled_nepremicnin.html', lokacije=lokacije)
 
 
 @bottle.route('/pregled-stranke')
 def pregled_stranke():
-    return bottle.template('pregled_stranke')
+    return bottle.template('pregled_stranke.html')
 
 
 @bottle.route('/handle-dodaj-nepremicnino', method='POST')
