@@ -303,4 +303,4 @@ class Interes:
 #     print(item)
 
 conn.commit()
-#conn.close()
+conn.close()

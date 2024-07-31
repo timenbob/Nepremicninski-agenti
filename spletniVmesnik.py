@@ -10,8 +10,8 @@ def naslovna_stran():
 @bottle.route('/prijava/', method=['GET', 'POST'])
 def prijava():
     if bottle.request.method == 'POST':
-        ime = bottle.request.forms.get('uporabnisko_ime')
-        geslo1 = bottle.request.forms.get('geslo')
+        ime = bottle.request.forms.getunicode('uporabnisko_ime')
+        geslo1 = bottle.request.forms.getunicode('geslo')
         geslo2 = Agenti.geslo(ime)
 
         if geslo1==geslo2:
