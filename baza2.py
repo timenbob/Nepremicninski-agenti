@@ -56,7 +56,7 @@ class Tabela:
         """
         podatki = {kljuc: vrednost for kljuc, vrednost in podatki.items()
                    if vrednost is not None}
-        print(podatki)
+        #print(podatki)
         poizvedba = self.dodajanje(podatki.keys())
         cur = self.conn.execute(poizvedba, podatki)
         return cur.lastrowid
@@ -306,7 +306,7 @@ def ustvari_bazo(conn):
     Izvede ustvarjanje baze.
     """
     tabele = pripravi_tabele(conn)
-    print(tabele)
+    #print(tabele)
     izbrisi_tabele(tabele)
     ustvari_tabele(tabele)
     uvozi_podatke(tabele)
