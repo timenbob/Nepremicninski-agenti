@@ -40,6 +40,32 @@
                         <button type="submit" class="btn btn-primary">Izberi</button>
                     </form>
                 </div>
+                <h2>Moji klijenti</h2>
+                <table class="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ime</th>
+                            <th>Kontakt</th>
+                            <th>Buget</th>
+                            <th>lokacija</th>
+                            <th>vrsta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        % for klijent in klijenti:
+                        <tr>
+                            <td>{{klijent.id}}</td>
+                            <td>{{klijent.ime}}</td>
+                            <td>{{klijent.kontakt}}</td>
+                            <td>{{klijent.buget}}</td>
+                            <td>{{klijent.lokacija}}</td>
+                            <td>{{klijent.vrsta}}</td>
+                        </tr>
+                        % end
+                    </tbody>  
+                </table>
             </div>
         </div>
     </section>

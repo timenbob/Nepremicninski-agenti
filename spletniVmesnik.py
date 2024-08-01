@@ -36,7 +36,8 @@ def prijava():
             print(bottle.request.get_cookie("UpIme",secret=secret_key))
             if geslo1==geslo2:
                 if naziv==1:
-                    return bottle.template('agent.html', ime_agent=agent)
+                    klijenti = Agenti.klijenti_agenta(int(id))
+                    return bottle.template('agent.html', klijenti=klijenti,ime_agent=agent)
                 elif naziv==0:
                     return bottle.template('boss.html', ime_agent=agent)
             else:
@@ -145,6 +146,20 @@ def agent():
 def brskaj_nepremicnine():
     return bottle.template('brskaj_nepremicnine.html',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
 
+@bottle.route('/brskaj_nepremicnine', method='POST')
+def agent():
+    selected_action = bottle.request.forms.get('actions')
+    if selected_action == 'vse-lokacije':
+        bottle.redirect('/vse-lokacije')
+    elif selected_action == 'na-lokaciji':
+        bottle.redirect('/na-lokaciji')
+    elif selected_action == 'manjse-od-cene':
+        bottle.redirect('/manjse-od-cene')
+    elif selected_action == 'glede-na-vrsto':
+        bottle.redirect('/glede-na-vrsto')
+    else:
+        return "Invalid action selected"
+
 ######################################################################################gor meniji
 
 @bottle.route('/dodaj-stranko')
@@ -161,7 +176,6 @@ def pregled_nepremicnine():
 @bottle.route('/pregled-stranke')
 def pregled_stranke():
     return bottle.template('pregled_stranke.html')
-
 
 @bottle.route('/dodaj-nepremicnino', method=['GET', 'POST'])
 def dodaj_nepremicnino():
@@ -263,8 +277,6 @@ def handle_select_kupca():
     else:
         return "No buyer selected", 400
     
-
-
 #nepremicnine ki lahko zanimajo kupca za agente
 @bottle.route('/select-kupca-agent')
 def select_kupca():
@@ -334,6 +346,92 @@ def agenti_kupc(id_agenta):
     
     # Render the template with the list of agents
     return bottle.template('klijenti_agenta.html', id_agenta=id_agenta, klijenti=klijenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#vsi klijenti
+@bottle.route('/vsi-kupci')
+def vsi_kupci():
+    klijenti=Kupci.vsi_klijenti()
+    return bottle.template('vsi-klijenti.html',klijenti=klijenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#vsi agenti
+@bottle.route('/vsi_agenti')
+def vsi_agenti():
+    agenti=Agenti.vsi_agenti()
+    return bottle.template('vsi_agenti.html',agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+
+#vse nepremicnine
+@bottle.route('/vse_nepremicnine')
+def vse_nepremicnine():
+    nepremicnine=Nepremicnine.vse_nepremicnine()
+    return bottle.template('vse_nepremicnien.html',nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#brskaj nepremicnine
+#vse lokacije
+
+@bottle.route('/vse-lokacije')
+def vse_lokacije():
+    lokacije=Nepremicnine.vse_lokacije()
+    return bottle.template('vse-lokacije.html',lokacije=lokacije,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#filtriranje glede na lokacije
+@bottle.route('/na-lokaciji')
+def na_lokaciji():
+    
+    lokacije=Nepremicnine.vse_lokacije()
+    return bottle.template('na-lokaciji-izbor.html', lokacije=lokacije,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/poslji-lokacijo', method='POST')
+def poslji_lokacijo():
+    lokacija = bottle.request.forms.get('lokacija')
+    if lokacija:
+        return bottle.redirect(f'/neprem_na_lokaciji/{lokacija}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/neprem_na_lokaciji/<lokacija>')
+def neprem_na_lokaciji(lokacija):
+    nepremicnine = Nepremicnine.f_lokacija(lokacija)
+    return bottle.template('vse_nepremicnien.html', nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#filtriraj glede na ceno(manjse)
+@bottle.route('/manjse-od-cene')
+def manjse_od_cene():
+    return bottle.template('manjse-od-cene.html',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/max-cena', method='POST')
+def poslji_ceno():
+    budget = bottle.request.forms.get('budget')
+    if budget:
+        return bottle.redirect(f'/neprem_pod_ceno/{budget}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/neprem_pod_ceno/<budget>')
+def neprem_pod_ceno(budget):
+    nepremicnine = Nepremicnine.f_manjse_od_cena(budget)
+    return bottle.template('vse_nepremicnien.html', nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#filtriraj glede na vrsto
+@bottle.route('/glede-na-vrsto')
+def glede_na_vrsto():
+    
+    vrste=Nepremicnine.vse_vrste()
+    return bottle.template('na-lokaciji-izbor.html', vrste=vrste, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/poslji-vrsto', method='POST')
+def poslji_vrsto():
+    vrsta = bottle.request.forms.get('vrsta')
+    if vrsta:
+        return bottle.redirect(f'/neprem_vrste/{vrsta}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/neprem_vrste/<vrsta>')
+def neprem_vrste(vrsta):
+    nepremicnine = Nepremicnine.f_vrsta_nepremicnine(vrsta)
+    return bottle.template('vse_nepremicnien.html', nepremicnine=nepremicnine, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
 
 
 

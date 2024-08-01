@@ -109,7 +109,18 @@ class Agenti:
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
     """
- 
+    
+    @staticmethod
+    def vsi_agenti():
+        '''vrne katere vse agente'''
+
+        sql = """
+            SELECT id, ime, kontakt, geslo,naziv FROM agent
+            """
+        results = []
+        for id, ime, kontakt, geslo,naziv in conn.execute(sql, []):
+            results.append(Agenti(id, ime, kontakt, geslo,naziv))
+        return results
 
 
 
@@ -199,6 +210,18 @@ class Kupci:
         for id, ime in conn.execute(sql, [id_agent]):
             results.append((id,ime))
         return results
+    
+    @staticmethod
+    def vsi_klijenti():
+        '''vrne katere vse klijente'''
+
+        sql = """
+            SELECT id, ime, kontakt, buget,lokacija,vrsta FROM kupci
+            """
+        results = []
+        for id, ime, kontakt, buget,lokacija,vrsta in conn.execute(sql, []):
+            results.append(Kupci(id, ime, kontakt, buget,lokacija,vrsta))
+        return results
 
 
 
@@ -213,6 +236,18 @@ class Nepremicnine:
 
     def __str__(self):
         return f'id : {self.id}, Lastnik: {self.lastnik}, Cena :{self.cena}, Lokacija :{self.lokacija}, Vrsta: {self.vrsta}'
+
+    @staticmethod
+    def vse_nepremicnine():
+        '''vrne katere vse nepremicnine'''
+
+        sql = """
+            SELECT id, lastnik, cena, vrsta, lokacija FROM nepremicnine
+            """
+        results = []
+        for id, lastnik, cena, vrsta, lokacija in conn.execute(sql, []):
+            results.append(Nepremicnine(id, lastnik, cena, vrsta, lokacija))
+        return results
 
     @staticmethod
     def f_manjse_od_cena(max_cena):
@@ -251,6 +286,20 @@ class Nepremicnine:
             lokacije.append(lokacija)
         
         return lokacije
+    
+    @staticmethod
+    def vse_vrste():
+        """vrne seznam vrst nepremicnin"""
+
+        sql = """
+        SELECT vrsta FROM nepremicnine
+        GROUP BY vrsta;
+        """
+        vrste = []
+        for vrsta in conn.execute(sql):
+            vrste.append(vrsta)
+        
+        return vrste
     
     @staticmethod
     def f_vrsta_nepremicnine(vrsta):
