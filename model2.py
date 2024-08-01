@@ -49,6 +49,18 @@ class Agenti:
         return self.ime
     
     @staticmethod
+    def agenti():
+        '''vrne id ter ime kupca'''
+
+        sql = """
+            SELECT id, ime FROM agent;
+            """
+        results = []
+        for id, ime  in conn.execute(sql):
+            results.append((id, ime))
+        return results
+    
+    @staticmethod
     def geslo(ime):
         """
         Preveri, ali sta uporabniško ime geslo pravilna.
@@ -84,7 +96,10 @@ class Agenti:
         sql = """
             INSERT INTO agent (ime, kontakt,geslo,naziv) VALUES (?, ?, ?, ?);
             """
-    
+        conn.execute(sql, [ime, kontakt, geslo, naziv])
+
+
+        """
         try:
             conn.execute(sql, [ime, kontakt, geslo, naziv])
             conn.commit()  # Commit the transaction
@@ -93,7 +108,7 @@ class Agenti:
             print(f"Error occurred: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
-    
+    """
  
 
 
@@ -118,7 +133,9 @@ class Kupci:
         sql = """
             INSERT INTO kupci (ime, kontakt,buget,lokacija,vrsta) VALUES (?,?,?,?,?);
             """
-    
+        conn.execute(sql, [ime, kontakt, buget, lokacija, vrsta])
+
+        """
         try:
             conn.execute(sql, [ime, kontakt, buget, lokacija, vrsta])
             conn.commit()  # Commit the transaction
@@ -127,8 +144,19 @@ class Kupci:
             print(f"Error occurred: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+"""
 
+    @staticmethod
+    def kupci():
+        '''vrne id ter ime kupca'''
 
+        sql = """
+            SELECT id, ime FROM kupci;
+            """
+        results = []
+        for id, ime  in conn.execute(sql):
+            results.append((id, ime))
+        return results
 
     @staticmethod
     def agenti(id_kupec):
@@ -158,7 +186,19 @@ class Kupci:
             results.append(Nepremicnine(id,lastnik,cena,vrsta,lokacija))
         return results
     
-    
+    @staticmethod
+    def klijenti_agenta(id_agent):
+        '''vrne katere vse klijente od agenta'''
+
+        sql = """
+            SELECT id, ime FROM kupci
+            JOIN zastopa ON kupci.id=zastopa.id_kupec
+            WHERE zastopa.id_agent = ?;
+            """
+        results = []
+        for id, ime in conn.execute(sql, [id_agent]):
+            results.append((id,ime))
+        return results
 
 
 

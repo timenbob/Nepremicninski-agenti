@@ -95,7 +95,7 @@ def agenti():
     if selected_action == 'dodaj-agenta':
         bottle.redirect('/dodaj-agenta')
     elif selected_action == 'klijenti-agenta':
-        bottle.redirect('/klijenti_agenta')
+        bottle.redirect('/klijenti_agenta_izbor')
     elif selected_action == 'vsi-agenti':
         bottle.redirect('/vsi_agenti')
     else:
@@ -123,7 +123,7 @@ def agent():
     if selected_action == 'dodaj-stranko':
         bottle.redirect('/dodaj-stranko')
     elif selected_action == 'nepremicnine-ki-ustrezajo':
-        bottle.redirect('/nepremicnine-ki-ustrezajo')
+        bottle.redirect('/select-kupca-agent')
     else:
         return "Invalid action selected"
     
@@ -135,9 +135,9 @@ def agent():
     elif selected_action == 'vsi-kupci':
         bottle.redirect('/vsi-kupci')
     elif selected_action == 'agenti-kupca':
-        bottle.redirect('/agenti-kupca')
-    elif selected_action == 'nepremicnine-ki-ustrezajo':
-        bottle.redirect('/nepremicnine-ki-ustrezajo')
+        bottle.redirect('/select-kupca')
+    elif selected_action == 'Nepremicnine-ki-ustrezajo':
+        bottle.redirect('/select-kupca-boss')
     else:
         return "Invalid action selected"
 
@@ -182,13 +182,11 @@ def dodaj_nepremicnino():
         except ValueError:
             return bottle.template('dodaj_nepremicnino.html', napaka="Please enter a valid number for price.")
 
-        # Process the data
-        nepremicnina = Nepremicnine(lastnik=lastnik, cena=cena, vrsta=vrsta, lokacija=lokacija, id=None)
+     
+        Nepremicnine.dodaj_nepremicnino(lastnik,cena,vrsta,lokacija)
+       
 
-        # Save the nepremicnina object to your database or data structure here
-
-        # Redirect to the home page or another page after successfully adding the property
-        return bottle.redirect('/')
+        return bottle.redirect('/agent',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
     else:
         # Display the form for adding a new property
         return bottle.template('dodaj_nepremicnino.html', napaka=None, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
@@ -206,26 +204,137 @@ def dodaj_agenta():
         if not ime or not kontakt or not geslo or not naziv:
             return bottle.template('dodaj_agenta.html', napaka="Vsa polja so obvezna.")
         
-        # Process the data (e.g., store the agent information)
-        agent = Agent(ime=ime, kontakt=kontakt, geslo=geslo, naziv=naziv)
-        
-        # Save the agent (implement your own saving logic, like to a database)
-        save_agent(agent)
-        
-        # Redirect or show success message
-        return bottle.redirect('/agents')  # Redirect to a list of agents or another page
+        Nepremicnine.dodaj_agenta(ime, kontakt, geslo, naziv)
+
+        return bottle.redirect('/agenti') 
     else:
         return bottle.template('dodaj_agenta.html', napaka=None,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
 
 
-@bottle.route('/handle-dodaj-stranko', method='POST')
-def handle_dodaj_stranko():
-    ime = bottle.request.forms.get('ime')
-    kontakt = bottle.request.forms.get('kontakt')
+@bottle.route('/dodaj-kupca', method=['GET', 'POST'])
+def dodaj_kupca():
+    if bottle.request.method == 'POST':
+        # Retrieve form data
+        ime = bottle.request.forms.get('ime')
+        kontakt = bottle.request.forms.get('kontakt')
+        budget = bottle.request.forms.get('budget')
+        lokacija = bottle.request.forms.get('lokacija')
+        vrsta = bottle.request.forms.get('vrsta')
 
-    kupci = Kupci(ime=ime, kontakt=kontakt, buget=0, lokacija="", vrsta="", id=None)
+        # Basic validation
+        if not ime or not kontakt or not budget or not lokacija or vrsta not in ['apartment', 'house', 'land']:
+            return bottle.template('dodaj_kupca.html', napaka="Vsa polja so obvezna in vrsta mora biti apartment, house ali land.")
 
-    return bottle.redirect('/')
+        try:
+            budget = int(budget)
+        except ValueError:
+            return bottle.template('dodaj_kupca.html', napaka="Budget mora biti številčna vrednost.")
+
+       
+        Kupci.dodaj_kupca(ime, kontakt, budget, lokacija, vrsta)
+
+        
+        return bottle.redirect('/kupci') 
+    else:
+        return bottle.template('dodaj_kupca.html', napaka=None)
+
+#########################################################gor je dodajanje
+
+#agenti kupca
+@bottle.route('/agenti-kupca/<id_kupec:int>')
+def agenti_kupca(id_kupec):
+    # Fetch agents associated with the buyer
+    agenti = Kupci.agenti(id_kupec)
+    
+    # Render the template with the list of agents
+    return bottle.template('agenti_kupca.html', id_kupec=id_kupec, agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/select-kupca')
+def select_kupca():
+    
+    buyers = Kupci.kupci()  
+    return bottle.template('agenti_kupca_izbor.html', buyers=buyers,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/izbor_kupca', method='POST')
+def handle_select_kupca():
+    id_kupca = bottle.request.forms.get('id_kupca')
+    if id_kupca:
+        return bottle.redirect(f'/agenti-kupca/{id_kupca}')
+    else:
+        return "No buyer selected", 400
+    
+
+
+#nepremicnine ki lahko zanimajo kupca za agente
+@bottle.route('/select-kupca-agent')
+def select_kupca():
+    
+    buyers = Kupci.klijenti_agenta(int(bottle.request.get_cookie("id",secret=secret_key)))  
+    return bottle.template('kupca_izbor_agent.html', buyers=buyers,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/izbor_kupca_agent', method='POST')
+def handle_select_kupca():
+    id_kupca = bottle.request.forms.get('id_kupca')
+    if id_kupca:
+        return bottle.redirect(f'/neprem-kupca_agent/{id_kupca}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/neprem-kupca_agent/<id_kupec:int>')
+def agenti_kupca(id_kupec):
+    # Fetch agents associated with the buyer
+    nepremicnine = Kupci.nepremicnine(id_kupec)
+    
+    # Render the template with the list of agents
+    return bottle.template('nepremicnine_kupca_agent.html', id_kupec=id_kupec, nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#nepremicnine ki lahko zanimajo kupca za boss
+@bottle.route('/select-kupca-boss')
+def select_kupca():
+    
+    buyers = Kupci.kupci()
+    return bottle.template('kupca_izbor_boss.html', buyers=buyers,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/izbor_kupca_boss', method='POST')
+def handle_select_kupca():
+    id_kupca = bottle.request.forms.get('id_kupca')
+    if id_kupca:
+        return bottle.redirect(f'/neprem-kupca_agent/{id_kupca}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/neprem-kupca_boss/<id_kupec:int>')
+def agenti_kupca(id_kupec):
+    # Fetch agents associated with the buyer
+    nepremicnine = Kupci.nepremicnine(id_kupec)
+    
+    # Render the template with the list of agents
+    return bottle.template('nepremicnine_kupca_agent.html', id_kupec=id_kupec, nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+#klijenti agenta
+@bottle.route('/klijenti_agenta_izbor')
+def select_agent():
+    
+    agenti = Agenti.agenti()
+    return bottle.template('izbor_agent.html', agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
+@bottle.route('/izbor_agenta', method='POST')
+def handle_select_agent():
+    id_agenta = bottle.request.forms.get('id_agenta')
+    print(f"Selected agent ID: {id_agenta}")  # Debug print
+    if id_agenta:
+        return bottle.redirect(f'/klijenti_agenta/{id_agenta}')
+    else:
+        return "No buyer selected", 400
+    
+@bottle.route('/klijenti_agenta/<id_agenta:int>')
+def agenti_kupc(id_agenta):
+    # Fetch agents associated with the buyer
+    klijenti = Agenti.klijenti_agenta(int(id_agenta))
+    
+    # Render the template with the list of agents
+    return bottle.template('klijenti_agenta.html', id_agenta=id_agenta, klijenti=klijenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+
 
 
 bottle.run(debug=True, reloader=True)

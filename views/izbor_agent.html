@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Prijava</title>
+</head>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Neprimicninski agenti</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <form class="d-flex" action="/" method="GET">
+                    <button class="btn btn-outline-success">Odjava</button>
+                </form>
+                
+            </div>
+        </div>
+    </nav>
+</header>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title" class="text-center" style="margin-top: 70px;">
+                Pozdravljen {{ime_agent}} <br>
+                Izberi agenta ter preglej njegove klijente
+            </h1>
+            <form method="POST" action="/izbor_agenta">
+                <div class="field">
+                    <label class="label">izberi agenta</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="id_agenta" required>
+                                % for agent in agenti:
+                                 <option value="{{agent[0]}}">{{agent[1]}} (ID: {{agent[0]}})</option>
+                                % end
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary">poglej</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
