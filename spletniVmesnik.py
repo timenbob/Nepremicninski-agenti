@@ -200,7 +200,7 @@ def dodaj_nepremicnino():
         Nepremicnine.dodaj_nepremicnino(lastnik,cena,vrsta,lokacija)
        
 
-        return bottle.redirect('/agent',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+        return bottle.redirect("/nepremicnine")
     else:
         # Display the form for adding a new property
         return bottle.template('dodaj_nepremicnino.html', napaka=None, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
@@ -218,7 +218,7 @@ def dodaj_agenta():
         if not ime or not kontakt or not geslo or not naziv:
             return bottle.template('dodaj_agenta.html', napaka="Vsa polja so obvezna.")
         
-        Nepremicnine.dodaj_agenta(ime, kontakt, geslo, naziv)
+        Agenti.dodaj_agenta(ime, kontakt, geslo, naziv)
 
         return bottle.redirect('/agenti') 
     else:
@@ -383,7 +383,7 @@ def na_lokaciji():
 
 @bottle.route('/poslji-lokacijo', method='POST')
 def poslji_lokacijo():
-    lokacija = bottle.request.forms.get('lokacija')
+    lokacija = str(bottle.request.forms.get('lokacija'))
     if lokacija:
         return bottle.redirect(f'/neprem_na_lokaciji/{lokacija}')
     else:
@@ -417,11 +417,11 @@ def neprem_pod_ceno(budget):
 def glede_na_vrsto():
     
     vrste=Nepremicnine.vse_vrste()
-    return bottle.template('na-lokaciji-izbor.html', vrste=vrste, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+    return bottle.template('vrste-izbor.html', vrste=vrste, ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
 
 @bottle.route('/poslji-vrsto', method='POST')
 def poslji_vrsto():
-    vrsta = bottle.request.forms.get('vrsta')
+    vrsta = str(bottle.request.forms.get('vrsta'))
     if vrsta:
         return bottle.redirect(f'/neprem_vrste/{vrsta}')
     else:

@@ -97,7 +97,7 @@ class Agenti:
             INSERT INTO agent (ime, kontakt,geslo,naziv) VALUES (?, ?, ?, ?);
             """
         conn.execute(sql, [ime, kontakt, geslo, naziv])
-
+        conn.commit()
 
         """
         try:
@@ -145,7 +145,7 @@ class Kupci:
             INSERT INTO kupci (ime, kontakt,buget,lokacija,vrsta) VALUES (?,?,?,?,?);
             """
         conn.execute(sql, [ime, kontakt, buget, lokacija, vrsta])
-
+        conn.commit()
         """
         try:
             conn.execute(sql, [ime, kontakt, buget, lokacija, vrsta])
@@ -335,6 +335,7 @@ class Nepremicnine:
             """
     
         conn.execute(sql, [lastnik, cena, vrsta, lokacija])
+        conn.commit()
 
     @staticmethod
     def pogled_agenta(id_agenta, id_kupca):

@@ -27,16 +27,16 @@
         <div class="container">
             <h1 class="title" class="text-center" style="margin-top: 70px;">
                 Pozdravljen {{ime_agent}} <br>
-                Izberi lokacijo nepremicnin
+                Izberi vrsto nepremicnin
             </h1>
-            <form method="POST" action="/poslji-lokacijo">
+            <form method="POST" action="/poslji-vrsto">
                 <div class="field">
-                    <label class="label">izberi Lokacijo</label>
+                    <label class="label">izberi vrsto</label>
                     <div class="control">
                         <div class="select">
-                            <select name="lokacija" required>
-                                % for lokacija in lokacije:
-                                 <option value="{{lokacija[0]}}">{{lokacija[0]}}</option>
+                            <select name="vrsta" required>
+                                % for vrsta in vrste:
+                                 <option value="{{vrsta[0]}}">{{vrsta[0]}}</option>
                                 % end
                             </select>
                         </div>
