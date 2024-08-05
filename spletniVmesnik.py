@@ -1,9 +1,10 @@
 import bottle
 from model2 import Agenti, Kupci, Nepremicnine, Zastopa, Interes
 import secrets
-from model2 import pripravi_bazo
+#from model2 import pripravi_bazo
 
-pripravi_bazo()
+
+#pripravi_bazo()
 
 # Generate a random secret key
 secret_key = "bla"

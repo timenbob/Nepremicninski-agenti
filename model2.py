@@ -5,6 +5,14 @@ from sqlite3 import IntegrityError
 import os
 
 
+if os.path.exists('baza.db'):
+    os.remove('baza.db')
+
+
+conn = sqlite3.connect('baza.db')
+baza2.ustvari_bazo_ce_ne_obstaja(conn)
+conn.execute('PRAGMA foreign_keys = ON')
+"""
 def pripravi_bazo():
     '''funkcija ki pripravi bazo'''
     if os.path.exists('baza.db'):
@@ -18,11 +26,12 @@ def pripravi_bazo():
     #agenti , kupci, nepremicnine, zastopa, interes = baza2.pripravi_tabele(conn)
     #baza2.pripravi_tabele(conn)
     conn.commit()
+    conn.close()
 
 pripravi_bazo()
-
+"""
 #mogoce odvec
-conn = sqlite3.connect('baza.db')
+#conn = sqlite3.connect('baza.db')
 
 
 class LoginError(Exception):
@@ -401,5 +410,5 @@ class Interes:
 # for item in Nepremicnine.pogled_agenta(2,131):
 #     print(item)
 
-conn.commit()
+#conn.commit()
 #conn.close()
