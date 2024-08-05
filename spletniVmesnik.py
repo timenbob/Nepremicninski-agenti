@@ -45,11 +45,10 @@ def prijava():
                 if naziv==1:
                     klijenti = Agenti.klijenti_agenta(int(id))
                     return bottle.template('agent.html', klijenti=klijenti,ime_agent=agent,uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
-                    #bottle.redirect('/agent_prijava')
+                    
                 elif naziv==0:
-                    #return bottle.template('boss.html', ime_agent=agent,uporabnik_id=1)
                     return bottle.template('boss.html', ime_agent=agent,uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
-                    #bottle.redirect('/boss_prijava')
+
                
             else:
                 return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
@@ -68,19 +67,6 @@ def prijava():
         bottle.response.delete_cookie('naziv', path='/prijava')
         return bottle.template('prijava.html', napaka=None)
 
-@bottle.route('/agent_prijava')
-def agent_prijava(): 
-    klijenti = Agenti.klijenti_agenta(int(id))
-    ime_agent = bottle.request.get_cookie("UpIme", secret=secret_key)
-    uporabnik_id = int(bottle.request.get_cookie("naziv", secret=secret_key))
-    return bottle.template('agent.html', klijenti=klijenti, ime_agent=ime_agent, uporabnik_id=uporabnik_id)
-
-
-@bottle.route('/boss_prijava')
-def boss_prijava():
-    ime_agent = bottle.request.get_cookie("UpIme", secret=secret_key)
-    uporabnik_id = int(bottle.request.get_cookie("naziv", secret=secret_key))
-    return bottle.template('boss.html', ime_agent=ime_agent, uporabnik_id=uporabnik_id)
 
 
 @bottle.route('/agent', method='POST')
