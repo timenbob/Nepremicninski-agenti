@@ -4,17 +4,25 @@ from sqlite3 import IntegrityError
 #from geslo import sifriraj_geslo, preveri_geslo
 import os
 
-if os.path.exists('baza.db'):
-    os.remove('baza.db')
+
+def pripravi_bazo():
+    '''funkcija ki pripravi bazo'''
+    if os.path.exists('baza.db'):
+        os.remove('baza.db')
 
 
+    conn = sqlite3.connect('baza.db')
+    baza2.ustvari_bazo_ce_ne_obstaja(conn)
+    conn.execute('PRAGMA foreign_keys = ON')
+
+    #agenti , kupci, nepremicnine, zastopa, interes = baza2.pripravi_tabele(conn)
+    #baza2.pripravi_tabele(conn)
+    conn.commit()
+
+pripravi_bazo()
+
+#mogoce odvec
 conn = sqlite3.connect('baza.db')
-baza2.ustvari_bazo_ce_ne_obstaja(conn)
-conn.execute('PRAGMA foreign_keys = ON')
-
-agenti , kupci, nepremicnine, zastopa, interes = baza2.pripravi_tabele(conn)
-
-
 
 
 class LoginError(Exception):
