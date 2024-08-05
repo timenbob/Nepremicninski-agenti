@@ -1,8 +1,36 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Pregled nepremičnine</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Pregled Nepremicnin</title>
 </head>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Neprimicninski agenti</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <form class="d-flex" action="/" method="GET">
+                    <button class="btn btn-outline-success">Odjava</button>
+                </form>
+            </div>
+            <div class="d-flex ml-auto">
+                % if uporabnik_id == 0:
+                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
+                    <a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a>
+                    <a class="btn btn-outline-primary mr-2" href="/kupci_boss">Kupci Boss</a>
+                % elif uporabnik_id == 1:
+                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
+                    <a class="btn btn-outline-primary mr-2" href="/kupci">Kupci</a>
+                % end
+            </div>
+        </div>
+    </nav>
+</header>
 <body>
     <h1>Pregled nepremičnine</h1>
     <form action="/handle-pregled-nepremicnine" method="post">

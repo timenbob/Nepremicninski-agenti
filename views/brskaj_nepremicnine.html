@@ -19,6 +19,16 @@
                 </form>
                 
             </div>
+            <div class="d-flex ml-auto">
+                % if uporabnik_id == 0:
+                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
+                    <a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a>
+                    <a class="btn btn-outline-primary mr-2" href="/kupci_boss">Kupci Boss</a>
+                % elif uporabnik_id == 1:
+                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
+                    <a class="btn btn-outline-primary mr-2" href="/kupci">Kupci</a>
+                % end
+            </div>
         </div>
     </nav>
 </header>
