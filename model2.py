@@ -5,13 +5,13 @@ from sqlite3 import IntegrityError
 import os
 
 
-if os.path.exists('baza.db'):
-    os.remove('baza.db')
+#if os.path.exists('baza.db'):
+#    os.remove('baza.db')
 
 
 conn = sqlite3.connect('baza.db')
-baza2.ustvari_bazo_ce_ne_obstaja(conn)
-conn.execute('PRAGMA foreign_keys = ON')
+#baza2.ustvari_bazo_ce_ne_obstaja(conn)
+#conn.execute('PRAGMA foreign_keys = ON')
 """
 def pripravi_bazo():
     '''funkcija ki pripravi bazo'''
