@@ -13,12 +13,14 @@ secrets.token_hex(32)
 
 @bottle.get('/')
 def naslovna_stran():
+
     bottle.response.delete_cookie('id', path='/')
     bottle.response.delete_cookie('UpIme', path='/')
     bottle.response.delete_cookie('naziv', path='/')
-    bottle.response.delete_cookie('id', path='/prijava')
-    bottle.response.delete_cookie('UpIme', path='/prijava')
-    bottle.response.delete_cookie('naziv', path='/prijava')
+    print("po brisanju")
+    print(bottle.request.get_cookie("id",secret=secret_key))
+    print(bottle.request.get_cookie("UpIme",secret=secret_key))
+    print(bottle.request.get_cookie("naziv",secret=secret_key))
     return bottle.template('osnova.html', napaka=None)
 
 
@@ -26,32 +28,45 @@ def naslovna_stran():
 def prijava():
     if bottle.request.method == 'POST':
         try:
+            print("pred nastavlajnjem")
+            print(bottle.request.get_cookie("id",secret=secret_key))
+            print(bottle.request.get_cookie("UpIme",secret=secret_key))
+            print(bottle.request.get_cookie("naziv",secret=secret_key))
             ime = bottle.request.forms.get('uporabnisko_ime')
             geslo1 = bottle.request.forms.get('geslo')
             
 
             (geslo2,id,agent,naziv)= Agenti.geslo(ime)
+
             bottle.response.set_cookie("naziv",str(naziv),secret=secret_key,path='/')
             bottle.response.set_cookie("id",str(id),secret=secret_key,path='/')
             bottle.response.set_cookie("UpIme",str(agent),secret=secret_key,path='/')
-            bottle.response.set_cookie("naziv",str(naziv),secret=secret_key,path='/prijava')
-            bottle.response.set_cookie("id",str(id),secret=secret_key,path='/prijava')
-            bottle.response.set_cookie("UpIme",str(agent),secret=secret_key,path='/prijava')
+            """
+            bottle.response.set_cookie("naziv_p",str(naziv),secret=secret_key,path='/prijava')
+            bottle.response.set_cookie("id_p",str(id),secret=secret_key,path='/prijava')
+            bottle.response.set_cookie("UpIme_p",str(agent),secret=secret_key,path='/prijava')
+            """
 
-            neki=bottle.request.get_cookie("id",secret=secret_key)
-            
+
+
+            print(agent)
             print(geslo1)
             print(geslo2)
-            print(neki)
+            print(bottle.request.get_cookie("id",secret=secret_key))
             print(bottle.request.get_cookie("UpIme",secret=secret_key))
             print(bottle.request.get_cookie("naziv",secret=secret_key))
+            """
+            print(bottle.request.get_cookie("id_p",secret=secret_key))
+            print(bottle.request.get_cookie("UpIme_p",secret=secret_key))
+            print(bottle.request.get_cookie("naziv_p",secret=secret_key))
+            """
             if geslo1==geslo2:
                 if naziv==1:
                     klijenti = Agenti.klijenti_agenta(int(id))
-                    return bottle.template('agent.html', klijenti=klijenti,ime_agent=agent,uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
+                    return bottle.template('agent.html', klijenti=klijenti,ime_agent=agent,uporabnik_id=int(naziv))
                     
                 elif naziv==0:
-                    return bottle.template('boss.html', ime_agent=agent,uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
+                    return bottle.template('boss.html', ime_agent=agent,uporabnik_id=int(naziv))
 
                
             else:
@@ -63,12 +78,7 @@ def prijava():
             return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
   
     else:
-        bottle.response.delete_cookie('id', path='/')
-        bottle.response.delete_cookie('UpIme', path='/')
-        bottle.response.delete_cookie('naziv', path='/')
-        bottle.response.delete_cookie('id', path='/prijava')
-        bottle.response.delete_cookie('UpIme', path='/prijava')
-        bottle.response.delete_cookie('naziv', path='/prijava')
+                        
         return bottle.template('prijava.html', napaka=None)
 
 
@@ -103,6 +113,9 @@ def agent():
 
 @bottle.route('/kupci_boss')
 def kupci_boss():
+    print(bottle.request.get_cookie("id",secret=secret_key))
+    print(bottle.request.get_cookie("UpIme",secret=secret_key))
+    print(bottle.request.get_cookie("naziv",secret=secret_key))
     return bottle.template('kupci_boss.html',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 @bottle.route('/agenti')
