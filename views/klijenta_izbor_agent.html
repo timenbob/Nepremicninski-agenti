@@ -23,10 +23,10 @@
                 % if uporabnik_id == 0:
                     <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
                     <a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a>
-                    <a class="btn btn-outline-primary mr-2" href="/kupci_boss">Kupci Boss</a>
+                    <a class="btn btn-outline-primary mr-2" href="/klijenti_boss">Klijenti Boss</a>
                 % elif uporabnik_id == 1:
                     <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
-                    <a class="btn btn-outline-primary mr-2" href="/kupci">Kupci</a>
+                    <a class="btn btn-outline-primary mr-2" href="/klijenti">Klijenti</a>
                 % end
             </div>
         </div>
@@ -37,14 +37,14 @@
         <div class="container">
             <h1 class="title" class="text-center" style="margin-top: 70px;">
                 Pozdravljen {{ime_agent}} <br>
-                Izberi kupca, da preveriš katere nepremičnine mu ustrezajo
+                Izberi klijenta, da preveriš katere nepremičnine mu ustrezajo
             </h1>
-            <form method="POST" action="/izbor_kupca_agent">
+            <form method="POST" action="/izbor_klijenta_agent">
                 <div class="field">
                     <label class="label">Select Buyer</label>
                     <div class="control">
                         <div class="select">
-                            <select name="id_kupca" required>
+                            <select name="id_klijenta" required>
                                 % for buyer in buyers:
                                  <option value="{{buyer[0]}}">{{buyer[1]}} (ID: {{buyer[0]}})</option>
                                 % end

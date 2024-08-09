@@ -23,10 +23,10 @@
                 % if uporabnik_id == 0:
                     <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
                     <a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a>
-                    <a class="btn btn-outline-primary mr-2" href="/kupci_boss">Kupci Boss</a>
+                    <a class="btn btn-outline-primary mr-2" href="/klijenti_boss">Klijenti Boss</a>
                 % elif uporabnik_id == 1:
                     <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
-                    <a class="btn btn-outline-primary mr-2" href="/kupci">Kupci</a>
+                    <a class="btn btn-outline-primary mr-2" href="/klijenti">Klijenti</a>
                 % end
             </div>
         </div>
@@ -41,13 +41,11 @@
                     Pozdravljen {{ime_agent}}
                 </h1>
                 <div class="dropdown mt-4">
-                    <form action="/kupci_boss" method="post">
+                    <form action="/klijenti" method="post">
                         <label for="actions" class="form-label">Izberite dejanje:</label>
                         <select id="actions" name="actions" class="form-select mb-3">
-                            <option value="dodaj-stranko">Dodaj stranko</option>
-                            <option value="vsi-kupci">Vsi kupci</option>
-                            <option value="agenti-kupca">Agenti kupca</option>
-                            <option value="Nepremicnine-ki-ustrezajo">Nepremicnine, ki ustrezajo kupcu</option>
+                            <option value="dodaj-klijenta">Dodaj klijenta</option>
+                            <option value="nepremicnine-ki-ustrezajo">Nepremicnine, ki ustrezajo klijentu</option>
                         </select>
                         <button type="submit" class="btn btn-primary">Izberi</button>
                     </form>
