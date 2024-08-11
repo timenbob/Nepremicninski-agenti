@@ -1,4 +1,4 @@
-import baza2
+import baza
 import sqlite3
 import os
 
