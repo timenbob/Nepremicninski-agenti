@@ -1,12 +1,9 @@
 import bottle
-from model2 import Agenti, Klijenti, Nepremicnine, Zastopa, Interes
+from model2 import Agenti, Klijenti, Nepremicnine
 import secrets
-#from model2 import pripravi_bazo
 
 
-#pripravi_bazo()
 
-# Generate a random secret key
 secret_key = "bla"
 secrets.token_hex(32)
 
@@ -17,10 +14,6 @@ def naslovna_stran():
     bottle.response.delete_cookie('id', path='/')
     bottle.response.delete_cookie('UpIme', path='/')
     bottle.response.delete_cookie('naziv', path='/')
-    print("po brisanju")
-    print(bottle.request.get_cookie("id",secret=secret_key))
-    print(bottle.request.get_cookie("UpIme",secret=secret_key))
-    print(bottle.request.get_cookie("naziv",secret=secret_key))
     return bottle.template('osnova.html', napaka=None)
 
 
@@ -41,25 +34,7 @@ def prijava():
             bottle.response.set_cookie("naziv",str(naziv),secret=secret_key,path='/')
             bottle.response.set_cookie("id",str(id),secret=secret_key,path='/')
             bottle.response.set_cookie("UpIme",str(agent),secret=secret_key,path='/')
-            """
-            bottle.response.set_cookie("naziv_p",str(naziv),secret=secret_key,path='/prijava')
-            bottle.response.set_cookie("id_p",str(id),secret=secret_key,path='/prijava')
-            bottle.response.set_cookie("UpIme_p",str(agent),secret=secret_key,path='/prijava')
-            """
-
-
-
-            print(agent)
-            print(geslo1)
-            print(geslo2)
-            print(bottle.request.get_cookie("id",secret=secret_key))
-            print(bottle.request.get_cookie("UpIme",secret=secret_key))
-            print(bottle.request.get_cookie("naziv",secret=secret_key))
-            """
-            print(bottle.request.get_cookie("id_p",secret=secret_key))
-            print(bottle.request.get_cookie("UpIme_p",secret=secret_key))
-            print(bottle.request.get_cookie("naziv_p",secret=secret_key))
-            """
+                      
             if geslo1==geslo2:
                 if naziv==1:
                     klijenti = Agenti.klijenti_agenta(int(id))
@@ -74,7 +49,7 @@ def prijava():
             
         except Exception as e:
             # Handle exceptions gracefully
-            print(f"An error occurred: {e}")
+            print(f"NAPAKA: {e}")
             return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
   
     else:
@@ -133,7 +108,7 @@ def agenti():
     elif selected_action == 'vsi-agenti':
         bottle.redirect('/vsi_agenti')
     else:
-        return "Invalid action selected"
+        return "Napačna izbira"
 
 @bottle.route('/nepremicnine')
 def nepremicnine():
@@ -149,7 +124,7 @@ def agent():
     elif selected_action == 'vse-nepremicnine':
         bottle.redirect('/vse_nepremicnine')
     else:
-        return "Invalid action selected"
+        return "Napačna izbira"
     
 @bottle.route('/klijenti', method='POST')
 def agent():
@@ -159,7 +134,7 @@ def agent():
     elif selected_action == 'nepremicnine-ki-ustrezajo':
         bottle.redirect('/select-klijenta-agent')
     else:
-        return "Invalid action selected"
+        return "Napačna izbira"
     
 @bottle.route('/klijenti_boss', method='POST')
 def agent():
@@ -173,7 +148,7 @@ def agent():
     elif selected_action == 'Nepremicnine-ki-ustrezajo':
         bottle.redirect('/select-klijenta-boss')
     else:
-        return "Invalid action selected"
+        return "Napačna izbira"
 
 @bottle.route('/brskaj_nepremicnine')
 def brskaj_nepremicnine():
@@ -191,7 +166,7 @@ def agent():
     elif selected_action == 'glede-na-vrsto':
         bottle.redirect('/glede-na-vrsto')
     else:
-        return "Invalid action selected"
+        return "Napačna izbira"
 
 ######################################################################################gor meniji
 
@@ -219,15 +194,13 @@ def dodaj_nepremicnino():
         vrsta = bottle.request.forms.get('vrsta')
         lokacija = bottle.request.forms.get('lokacija')
 
-        # Here, you should validate the inputs (e.g., check if fields are not empty, if 'cena' is a valid number, etc.)
         if not lastnik or not cena or not vrsta or not lokacija:
-            return bottle.template('dodaj_nepremicnino.html', napaka="Please fill in all the fields.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
+            return bottle.template('dodaj_nepremicnino.html', napaka="Izpolni vsa obmocja",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
         
         try:
-            # Convert 'cena' to a number if necessary (depending on your storage logic)
             cena = int(cena)
         except ValueError:
-            return bottle.template('dodaj_nepremicnino.html', napaka="Please enter a valid number for price.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
+            return bottle.template('dodaj_nepremicnino.html', napaka="Vnesi veljavno ceno.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
      
         Nepremicnine.dodaj_nepremicnino(lastnik,cena,vrsta,lokacija)
@@ -241,13 +214,11 @@ def dodaj_nepremicnino():
 @bottle.route('/dodaj-agenta', method=['GET', 'POST'])
 def dodaj_agenta():
     if bottle.request.method == 'POST':
-        # Retrieve form data
         ime = bottle.request.forms.get('ime')
         kontakt = bottle.request.forms.get('kontakt')
         geslo = bottle.request.forms.get('geslo')
         naziv = bottle.request.forms.get('naziv')
 
-        # Basic validation
         if not ime or not kontakt or not geslo or not naziv:
             return bottle.template('dodaj_agenta.html', napaka="Vsa polja so obvezna.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
         
@@ -261,14 +232,12 @@ def dodaj_agenta():
 @bottle.route('/dodaj-klijenta', method=['GET', 'POST'])
 def dodaj_klijenta():
     if bottle.request.method == 'POST':
-        # Retrieve form data
         ime = bottle.request.forms.get('ime')
         kontakt = bottle.request.forms.get('kontakt')
         budget = bottle.request.forms.get('budget')
         lokacija = bottle.request.forms.get('lokacija')
         vrsta = bottle.request.forms.get('vrsta')
 
-        # Basic validation
         if not ime or not kontakt or not budget or not lokacija or vrsta not in ['apartment', 'house', 'land']:
             return bottle.template('dodaj_klijenta.html', napaka="Vsa polja so obvezna in vrsta mora biti apartment, house ali land.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)),ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
 
@@ -290,10 +259,8 @@ def dodaj_klijenta():
 #agenti klijenta
 @bottle.route('/agenti-klijenta/<id_klijent:int>')
 def agenti_klijenta(id_klijent):
-    # Fetch agents associated with the buyer
     agenti = Klijenti.agenti(id_klijent)
     
-    # Render the template with the list of agents
     return bottle.template('agenti_klijenta.html', id_klijent=id_klijent, agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 @bottle.route('/select-klijenta')
@@ -308,7 +275,7 @@ def handle_select_klijenta():
     if id_klijenta:
         return bottle.redirect(f'/agenti-klijenta/{id_klijenta}')
     else:
-        return "No buyer selected", 400
+        return "Noben kupec izbran.", 400
     
 #nepremicnine ki lahko zanimajo klijenta za agente
 @bottle.route('/select-klijenta-agent')
@@ -323,14 +290,12 @@ def handle_select_klijenta():
     if id_klijenta:
         return bottle.redirect(f'/neprem-klijenta_agent/{id_klijenta}')
     else:
-        return "No buyer selected", 400
+        return "Noben kupec izbran.", 400
     
 @bottle.route('/neprem-klijenta_agent/<id_klijent:int>')
 def agenti_klijenta(id_klijent):
-    # Fetch agents associated with the buyer
     nepremicnine = Klijenti.nepremicnine(id_klijent)
     
-    # Render the template with the list of agents
     return bottle.template('nepremicnine_klijenta_agent.html', id_klijent=id_klijent, nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 #nepremicnine ki lahko zanimajo klijenta za boss
@@ -346,14 +311,12 @@ def handle_select_klijenta():
     if id_klijenta:
         return bottle.redirect(f'/neprem-klijenta_agent/{id_klijenta}')
     else:
-        return "No buyer selected", 400
+        return "Noben kupec izbran.", 400
     
 @bottle.route('/neprem-klijenta_boss/<id_klijent:int>')
 def agenti_klijenta(id_klijent):
-    # Fetch agents associated with the buyer
     nepremicnine = Klijenti.nepremicnine(id_klijent)
     
-    # Render the template with the list of agents
     return bottle.template('nepremicnine_klijenta_agent.html', id_klijent=id_klijent, nepremicnine=nepremicnine,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 #klijenti agenta
@@ -366,18 +329,15 @@ def select_agent():
 @bottle.route('/izbor_agenta', method='POST')
 def handle_select_agent():
     id_agenta = bottle.request.forms.get('id_agenta')
-    print(f"Selected agent ID: {id_agenta}")  # Debug print
     if id_agenta:
         return bottle.redirect(f'/klijenti_agenta/{id_agenta}')
     else:
-        return "No buyer selected", 400
+        return "Noben kupec izbran.", 400
     
 @bottle.route('/klijenti_agenta/<id_agenta:int>')
 def agenti_klijenta(id_agenta):
-    # Fetch agents associated with the buyer
     klijenti = Agenti.klijenti_agenta(int(id_agenta))
     
-    # Render the template with the list of agents
     return bottle.template('klijenti_agenta.html', id_agenta=id_agenta, klijenti=klijenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 #vsi klijenti
@@ -420,7 +380,7 @@ def poslji_lokacijo():
     if lokacija:
         return bottle.redirect(f'/neprem_na_lokaciji/{lokacija}')
     else:
-        return "No buyer selected", 400
+        return "Nobena lokacija izbrana.", 400
     
 @bottle.route('/neprem_na_lokaciji/<lokacija>')
 def neprem_na_lokaciji(lokacija):
@@ -438,7 +398,7 @@ def poslji_ceno():
     if budget:
         return bottle.redirect(f'/neprem_pod_ceno/{budget}')
     else:
-        return "No buyer selected", 400
+        return "Cena ni določena.", 400
     
 @bottle.route('/neprem_pod_ceno/<budget>')
 def neprem_pod_ceno(budget):
@@ -458,7 +418,7 @@ def poslji_vrsto():
     if vrsta:
         return bottle.redirect(f'/neprem_vrste/{vrsta}')
     else:
-        return "No buyer selected", 400
+        return "Vrsta ni izbrana", 400
     
 @bottle.route('/neprem_vrste/<vrsta>')
 def neprem_vrste(vrsta):
