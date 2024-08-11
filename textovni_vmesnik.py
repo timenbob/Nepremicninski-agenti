@@ -32,12 +32,55 @@ def manse_od_cene():
     for el in vrne:
         print(el)
 
+@prekinitev
+def agenti_klijenta():
+    """
+    izpiše agente klijenta
+    """
+    id_klijent=input("id_klijenta")
+    vrne = Klijenti.agenti(id_klijent)
+    for el in vrne:
+        print(el)
+
+@prekinitev
+def vsi_klijenti():
+    """
+    izpiše vse klijente
+    """
+    
+    vrne=Klijenti.vsi_klijenti()
+    for el in vrne:
+        print(el)
+
+@prekinitev
+def vse_nepremicnine():
+    """
+    izpiše vse nepremicnine
+    """
+    
+    vrne=Nepremicnine.vse_nepremicnine()
+    for el in vrne:
+        print(el)
+
+@prekinitev
+def vse_lokacije():
+    """
+    izpiše vse lokacije
+    """
+    
+    vrne=Nepremicnine.vse_lokacije()
+    for el in vrne:
+        print(el)
 
 class GlavniMeni(Meni):
     """
     Izbire v glavnem meniju.
     """
     Nepremicnine  = ('Izpiši nepremicnine s ceno manjšo od: ', manse_od_cene)
+    Agenti=("izpise vse agente klijenta: ", agenti_klijenta)
+    Klijenti=("izpise vse klijente: ", vsi_klijenti)
+    Nepremicnine2=("vse nepremicnine: " ,vse_nepremicnine)
+    Nepremicnine3=("vse lokacije nepremicnin: " ,vse_lokacije)
     SEL_DOMOV = ('Šel domov', domov)
 
 
