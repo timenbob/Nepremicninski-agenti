@@ -2,8 +2,6 @@ import bottle
 from model2 import Agenti, Klijenti, Nepremicnine
 import secrets
 
-
-
 secret_key = "bla"
 secrets.token_hex(32)
 
