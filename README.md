@@ -38,6 +38,9 @@ Ko se vpišemo kot agent, lahko analiziramo vse nepremicnine ter pregledujemo le
 #### Lastnik
 Lastnik imal poleg funkcionalnosti agentov tudi druge izbire. Lastnik lahko pregleduje tudi posamezen agente ter ima vpogled v vse klijente.
 
+<br>
+Ko prenehate uporabljati program v VisualStudiu, v terminalu kliknite ctrl-C, da se program res zaključi.
+
 
 ## Avtorji
 Milica Vukićević<br>
