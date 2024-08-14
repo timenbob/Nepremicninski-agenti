@@ -19,10 +19,6 @@ def naslovna_stran():
 def prijava():
     if bottle.request.method == 'POST':
         try:
-            print("pred nastavlajnjem")
-            print(bottle.request.get_cookie("id",secret=secret_key))
-            print(bottle.request.get_cookie("UpIme",secret=secret_key))
-            print(bottle.request.get_cookie("naziv",secret=secret_key))
             ime = bottle.request.forms.get('uporabnisko_ime')
             geslo1 = bottle.request.forms.get('geslo')
             
@@ -47,7 +43,7 @@ def prijava():
             
         except Exception as e:
             # Handle exceptions gracefully
-            print(f"NAPAKA: {e}")
+            #print(f"NAPAKA: {e}")
             return bottle.template('prijava.html', napaka="Napačno uporabniško ime ali geslo.")
   
     else:
@@ -74,7 +70,7 @@ def klijenti():
 @bottle.route('/boss', method='POST')
 def agent():
     selected_action = bottle.request.forms.get('actions')
-    print(bottle.request.get_cookie("UpIme",secret=secret_key))
+    #print(bottle.request.get_cookie("UpIme",secret=secret_key))
     if selected_action == 'nepremicnine':
         bottle.redirect('/nepremicnine')
     elif selected_action == 'agenti':
@@ -86,9 +82,6 @@ def agent():
 
 @bottle.route('/klijenti_boss')
 def klijenti_boss():
-    print(bottle.request.get_cookie("id",secret=secret_key))
-    print(bottle.request.get_cookie("UpIme",secret=secret_key))
-    print(bottle.request.get_cookie("naziv",secret=secret_key))
     return bottle.template('klijenti_boss.html',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
 
 @bottle.route('/agenti')
@@ -98,7 +91,7 @@ def agenti():
 @bottle.route('/agenti', method='POST')
 def agenti():
     selected_action = bottle.request.forms.get('actions')
-    print(bottle.request.get_cookie("UpIme",secret=secret_key))
+    #print(bottle.request.get_cookie("UpIme",secret=secret_key))
     if selected_action == 'dodaj-agenta':
         bottle.redirect('/dodaj-agenta')
     elif selected_action == 'klijenti-agenta':

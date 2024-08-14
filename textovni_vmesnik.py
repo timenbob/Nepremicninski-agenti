@@ -27,7 +27,7 @@ def manse_od_cene():
     """
     izpiše filme z ceno pod max_cena
     """
-    max_cena=input("maxsimalna cena")
+    max_cena=input("Najvišja cena: ")
     vrne=Nepremicnine.f_manjse_od_cena(max_cena)
     for el in vrne:
         print(el)
@@ -37,7 +37,7 @@ def agenti_klijenta():
     """
     izpiše agente klijenta
     """
-    id_klijent=input("id_klijenta")
+    id_klijent=input("Id_klijenta: ")
     vrne = Klijenti.agenti(id_klijent)
     for el in vrne:
         print(el)
@@ -70,17 +70,17 @@ def vse_lokacije():
     
     vrne=Nepremicnine.vse_lokacije()
     for el in vrne:
-        print(el)
+        print(el[0])
 
 class GlavniMeni(Meni):
     """
     Izbire v glavnem meniju.
     """
-    Nepremicnine  = ('Izpiši nepremicnine s ceno manjšo od: ', manse_od_cene)
-    Agenti=("izpise vse agente klijenta: ", agenti_klijenta)
-    Klijenti=("izpise vse klijente: ", vsi_klijenti)
-    Nepremicnine2=("vse nepremicnine: " ,vse_nepremicnine)
-    Nepremicnine3=("vse lokacije nepremicnin: " ,vse_lokacije)
+    Nepremicnine  = ('Izpiši nepremičnine s ceno manjšo od: ', manse_od_cene)
+    Agenti=("Izpiše vse agente klijenta: ", agenti_klijenta)
+    Klijenti=("Izpiše vse klijente: ", vsi_klijenti)
+    Nepremicnine2=("Vse nepremičnine: " ,vse_nepremicnine)
+    Nepremicnine3=("Vse lokacije nepremičnin: " ,vse_lokacije)
     SEL_DOMOV = ('Šel domov', domov)
 
 
@@ -91,7 +91,7 @@ def glavni_meni():
     """
     print('Pozdravljen v bazi Nepremicnine!')
     while True:
-        print('Kaj bi rad počel?')
+        print('Kaj bi radi počeli?')
         izbira = vnesi_izbiro(GlavniMeni)
         izbira.funkcija()
         if izbira == GlavniMeni.SEL_DOMOV:

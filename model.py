@@ -6,12 +6,12 @@ import os
 if not os.path.exists('baza.db'):
     #os.remove('baza.db')
     conn = sqlite3.connect('baza.db')
-    baza2.ustvari_bazo_ce_ne_obstaja(conn)
+    baza.ustvari_bazo_ce_ne_obstaja(conn)
     conn.execute('PRAGMA foreign_keys = ON')
 
 
-    agenti , klijenti, nepremicnine, zastopa, interes = baza2.pripravi_tabele(conn)
-    baza2.pripravi_tabele(conn)
+    agenti , klijenti, nepremicnine, zastopa, interes = baza.pripravi_tabele(conn)
+    baza.pripravi_tabele(conn)
     conn.commit()
     conn.close()
 
@@ -236,7 +236,7 @@ class Nepremicnine:
         self.lokacija=lokacija
 
     def __str__(self):
-        return f'id : {self.id}, Lastnik: {self.lastnik}, Cena :{self.cena}, Lokacija :{self.lokacija}, Vrsta: {self.vrsta}'
+        return f'id: {self.id}, Lastnik: {self.lastnik}, Cena: {self.cena}, Lokacija: {self.lokacija}, Vrsta: {self.vrsta}'
 
     @staticmethod
     def vse_nepremicnine():
