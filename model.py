@@ -373,7 +373,7 @@ class Interes:
 # for item in Nepremicnine.f_lokacija('Ljubljana'):
 #     print(item)
 
-# for item in Nepremicnine.f_vrsta_nepremicnine("house"):
+# for item in Nepremicnine.f_vrsta_nepremicnine("hisa"):
 #     print(item)
 
 # for elt in Klijenti.agenti(5):
@@ -389,7 +389,7 @@ class Interes:
 
 # Klijenti.dodaj_klijenta("ime", "kontakt", 6000, "lokacija", "vrsta")
 #Agenti.dodaj_agenta("neki", "neki", "neki", 1)
-#Nepremicnine.dodaj_nepremicnino("ndki", 90, "house", "Tudjemili")
+#Nepremicnine.dodaj_nepremicnino("ndki", 90, "hisa", "Tudjemili")
 
 # for item in Nepremicnine.pogled_agenta(2,131):
 #     print(item)

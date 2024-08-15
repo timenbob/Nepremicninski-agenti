@@ -229,8 +229,8 @@ def dodaj_klijenta():
         lokacija = bottle.request.forms.get('lokacija')
         vrsta = bottle.request.forms.get('vrsta')
 
-        if not ime or not kontakt or not budget or not lokacija or vrsta not in ['apartment', 'house', 'land']:
-            return bottle.template('dodaj_klijenta.html', napaka="Vsa polja so obvezna in vrsta mora biti apartment, house ali land.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)),ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
+        if not ime or not kontakt or not budget or not lokacija or vrsta not in ['stanovanje', 'hisa', 'zemljisce']:
+            return bottle.template('dodaj_klijenta.html', napaka="Vsa polja so obvezna in vrsta mora biti stanovanje, hisa ali zemljisce.",uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)),ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key))
 
         try:
             budget = int(budget)
