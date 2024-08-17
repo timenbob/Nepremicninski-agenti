@@ -9,16 +9,16 @@ Sam projekt je mišljen za zaposlene v podjetju, ki posluje z nepremičninami.
 ## Opis baze
 Baza vsebuje 6 tabel:
 Agenti, kjer se nahajajo informacije o agentih(id, ime, kontak(katerega se tudi uporabi pri prijavi), geslo, naziv). Naziv je pomemben, saj je odvisno od naziva kaj uporabnik lahko vse vidi.<br>
-Klijenti, kjer se nahajajo vse informavije o klijentih(id, ime, kontakt, buget, lokacija, vrsta)<br>
+Klienti, kjer se nahajajo vse informavije o klientih(id, ime, kontakt, buget, lokacija, vrsta)<br>
 Nepremicnine, kjer so vse informacije o nepremicninah(id, lastnik, cena, vrsta, lokacija)<br>
 <br>
 Interes: ta tabela vsebuje podatke o tem katere vse nepremicnine ustrezajo klijenu.<br>
-Zatopa: ta tabela vsebuje podatke o tem katere klijenta ima posamezni agent.<br>
+Zatopa: ta tabela vsebuje podatke o tem katere klienta ima posamezni agent.<br>
 
 ## Povezave
 Agent ima lahko 0 ali več klijentov.<br>
-Klijent(kupec) ima lahko enega ali več agentov.<br>
-Klijentu lahko ustreza 0 ali več nepremičnin.<br>
+Klient(kupec) ima lahko enega ali več agentov.<br>
+Klientu lahko ustreza 0 ali več nepremičnin.<br>
 Nepremičnina lahko ustreza 0 ali več klijentom.
 
 ## Postopek uporabe
@@ -33,10 +33,10 @@ neki@neki.com          password<br>
 
 ### Upravlajnje
 #### Agent
-Ko se vpišemo kot agent, lahko analiziramo vse nepremicnine ter pregledujemo le svoje klijente. Lahko dodajamo agente ter nepremicnine. Ko izberemo kakšne možnosti, da se vrnemo na osnovni meni lahko uporabljamo korake nazaj oziroma v zgodnjem desnem kotu imamo povezave do osnovnoh izbir menija.
+Ko se vpišemo kot agent, lahko analiziramo vse nepremicnine ter pregledujemo le svoje kliente. Lahko dodajamo agente ter nepremicnine. Ko izberemo kakšne možnosti, da se vrnemo na osnovni meni lahko uporabljamo korake nazaj oziroma v zgodnjem desnem kotu imamo povezave do osnovnoh izbir menija.
 
 #### Lastnik
-Lastnik imal poleg funkcionalnosti agentov tudi druge izbire. Lastnik lahko pregleduje tudi posamezen agente ter ima vpogled v vse klijente.
+Lastnik imal poleg funkcionalnosti agentov tudi druge izbire. Lastnik lahko pregleduje tudi posamezen agente ter ima vpogled v vse kliente.
 
 <br>
 Ko prenehate uporabljati program v VisualStudiu, v terminalu kliknite ctrl-C, da se program res zaključi.

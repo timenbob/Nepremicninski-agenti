@@ -10,7 +10,7 @@ if not os.path.exists('baza.db'):
     conn.execute('PRAGMA foreign_keys = ON')
 
 
-    agenti , klijenti, nepremicnine, zastopa, interes = baza.pripravi_tabele(conn)
+    agenti , klienti, nepremicnine, zastopa, interes = baza.pripravi_tabele(conn)
     baza.pripravi_tabele(conn)
     conn.commit()
     conn.close()
@@ -51,7 +51,7 @@ class Agenti:
     
     @staticmethod
     def agenti():
-        '''vrne id ter ime klijenta'''
+        '''vrne id ter ime klienta'''
 
         sql = """
             SELECT id, ime FROM agent;
@@ -64,30 +64,29 @@ class Agenti:
     @staticmethod
     def geslo(ime):
         """
-        Preveri, ali sta uporabniško ime geslo pravilna.
+        Preveri, ali sta uporabniško ime in geslo pravilna.
         """
         sql = """
-            SELECT id,geslo,ime,naziv FROM agent
+            SELECT id, geslo, ime, naziv FROM agent
             WHERE kontakt = ?
         """
-        geslo = conn.execute(sql, [ime]).fetchone()[1]
-        id = conn.execute(sql, [ime]).fetchone()[0]
-        agent=conn.execute(sql, [ime]).fetchone()[2]
-        naziv=conn.execute(sql, [ime]).fetchone()[3]
-        return (geslo,id,agent,naziv)
+        result = conn.execute(sql, [ime]).fetchone()
+        id, geslo, agent, naziv = result
+        return (geslo, id, agent, naziv)
+
 
         
-    def klijenti_agenta(id_agenta):
-        '''vrne vse klijente ki jih ima agent'''
+    def klienti_agenta(id_agenta):
+        '''vrne vse kliente ki jih ima agent'''
 
         sql = """
-            SELECT klijenti.id, klijenti.ime,klijenti.kontakt, klijenti.buget,klijenti.lokacija,klijenti.vrsta FROM klijenti
-            JOIN zastopa on id_klijent=klijenti.id
+            SELECT klienti.id, klienti.ime,klienti.kontakt, klienti.buget,klienti.lokacija,klienti.vrsta FROM klienti
+            JOIN zastopa on id_klient=klienti.id
             WHERE id_agent= ?;
             """
         results = []
         for id, ime, kontakt, buget, lokacija, vrsta in conn.execute(sql, [id_agenta]):
-            results.append(Klijenti(id, ime, kontakt, buget, lokacija, vrsta))
+            results.append(Klienti(id, ime, kontakt, buget, lokacija, vrsta))
         return results
     
     @staticmethod
@@ -126,7 +125,7 @@ class Agenti:
 
 
 
-class Klijenti:
+class Klienti:
     def __init__ (self, id,ime,kontakt,buget,lokacija,vrsta):
         self.id= id
         self.ime = ime
@@ -139,11 +138,11 @@ class Klijenti:
         return f"ID: {self.id}, Name: {self.ime}, Contact: {self.kontakt}, Budget: {self.buget}, Location: {self.lokacija}, Type: {self.vrsta}"
     
     @staticmethod
-    def dodaj_klijenta(ime, kontakt, buget, lokacija, vrsta):
-        '''doda klijenta'''
+    def dodaj_klienta(ime, kontakt, buget, lokacija, vrsta):
+        '''doda klienta'''
 
         sql = """
-            INSERT INTO klijenti (ime, kontakt,buget,lokacija,vrsta) VALUES (?,?,?,?,?);
+            INSERT INTO klienti (ime, kontakt,buget,lokacija,vrsta) VALUES (?,?,?,?,?);
             """
         conn.execute(sql, [ime, kontakt, buget, lokacija, vrsta])
         conn.commit()
@@ -159,11 +158,11 @@ class Klijenti:
 """
 
     @staticmethod
-    def klijenti():
-        '''vrne id ter ime klijenta'''
+    def klienti():
+        '''vrne id ter ime klienta'''
 
         sql = """
-            SELECT id, ime FROM klijenti;
+            SELECT id, ime FROM klienti;
             """
         results = []
         for id, ime  in conn.execute(sql):
@@ -171,40 +170,53 @@ class Klijenti:
         return results
 
     @staticmethod
-    def agenti(id_klijent):
-        '''vrne katere vse agente ima klijent'''
+    def id_klienti(kontakt):
+        '''vrne id ter ime klienta'''
+
+        sql = """
+            SELECT id FROM klienti
+            where kontakt=?;
+            """
+        
+        id = conn.execute(sql,[kontakt]).fetchone()[0]
+        return id
+
+
+    @staticmethod
+    def agenti(id_klient):
+        '''vrne katere vse agente ima klient'''
 
         sql = """
             SELECT agent.id, agent.ime, agent.kontakt, agent.geslo,agent.naziv FROM agent
             JOIN zastopa on id_agent=agent.id
-            WHERE id_klijent= ?;
+            WHERE id_klient= ?;
             """
         results = []
-        for id, ime, kontakt, geslo, naziv  in conn.execute(sql, [id_klijent]):
+        for id, ime, kontakt, geslo, naziv  in conn.execute(sql, [id_klient]):
             results.append(Agenti(id, ime, kontakt, geslo, naziv))
         return results
     
     @staticmethod
-    def nepremicnine(id_klijent):
-        '''vrne katere vse nepremicnine lahko zanimajo klijenta'''
+    def nepremicnine(id_klient):
+        '''vrne katere vse nepremicnine lahko zanimajo klienta'''
 
         sql = """
             SELECT nepremicnine.id, nepremicnine.lastnik, nepremicnine.cena, nepremicnine.vrsta,lokacija FROM nepremicnine
             JOIN interes ON nepremicnine.id=id_nepremicnine
-            WHERE id_klijent = ?;
+            WHERE id_klient = ?;
             """
         results = []
-        for id, lastnik, cena, vrsta, lokacija  in conn.execute(sql, [id_klijent]):
+        for id, lastnik, cena, vrsta, lokacija  in conn.execute(sql, [id_klient]):
             results.append(Nepremicnine(id,lastnik,cena,vrsta,lokacija))
         return results
     
     @staticmethod
-    def klijenti_agenta(id_agent):
-        '''vrne katere vse klijente od agenta'''
+    def klienti_agenta(id_agent):
+        '''vrne katere vse kliente od agenta'''
 
         sql = """
-            SELECT id, ime FROM klijenti
-            JOIN zastopa ON klijenti.id=zastopa.id_klijent
+            SELECT id, ime FROM klienti
+            JOIN zastopa ON klienti.id=zastopa.id_klient
             WHERE zastopa.id_agent = ?;
             """
         results = []
@@ -213,15 +225,15 @@ class Klijenti:
         return results
     
     @staticmethod
-    def vsi_klijenti():
-        '''vrne katere vse klijente'''
+    def vsi_klienti():
+        '''vrne katere vse kliente'''
 
         sql = """
-            SELECT id, ime, kontakt, buget,lokacija,vrsta FROM klijenti
+            SELECT id, ime, kontakt, buget,lokacija,vrsta FROM klienti
             """
         results = []
         for id, ime, kontakt, buget,lokacija,vrsta in conn.execute(sql, []):
-            results.append(Klijenti(id, ime, kontakt, buget,lokacija,vrsta))
+            results.append(Klienti(id, ime, kontakt, buget,lokacija,vrsta))
         return results
 
 
@@ -314,17 +326,17 @@ class Nepremicnine:
             yield Nepremicnine(id, lastnik, cena, vrsta, lokacija)
     
     @staticmethod
-    def klijenti(id_nepremicnina):
-        '''kateri klijenti odgovarjajo tisti nepremicnini'''
+    def klienti(id_nepremicnina):
+        '''kateri klienti odgovarjajo tisti nepremicnini'''
 
         sql = """
-            SELECT id,ime,kontakt,buget,lokacija,vrsta FROM klijenti
-            JOIN interes ON klijenti.id=id_klijent
+            SELECT id,ime,kontakt,buget,lokacija,vrsta FROM klienti
+            JOIN interes ON klienti.id=id_klient
             WHERE id_nepremicnine= ?;
             """
         results = []
         for id,ime,kontakt,buget,lokacija,vrsta  in conn.execute(sql, [id_nepremicnina]):
-            results.append(Klijenti(id,ime,kontakt,buget,lokacija,vrsta))
+            results.append(Klienti(id,ime,kontakt,buget,lokacija,vrsta))
         return results
     
     @staticmethod
@@ -339,34 +351,67 @@ class Nepremicnine:
         conn.commit()
 
     @staticmethod
-    def pogled_agenta(id_agenta, id_klijenta):
-        '''vrne vse neopremicnine ka odgovarjajo enemu klijentu od enega agenta'''
+    def pogled_agenta(id_agenta, id_klienta):
+        '''vrne vse neopremicnine ka odgovarjajo enemu klientu od enega agenta'''
 
         sql = """
             SELECT id, lastnik, cena, vrsta, lokacija FROM nepremicnine
             JOIN interes ON nepremicnine.id=id_nepremicnine
-            JOIN zastopa on zastopa.id_klijent=interes.id_klijent
-            WHERE interes.id_klijent=? and zastopa.id_agent=?;
+            JOIN zastopa on zastopa.id_klient=interes.id_klient
+            WHERE interes.id_klient=? and zastopa.id_agent=?;
             """
         results = []
-        for id, lastnik, cena, vrsta, lokacija  in conn.execute(sql, [id_klijenta, id_agenta]):
+        for id, lastnik, cena, vrsta, lokacija  in conn.execute(sql, [id_klienta, id_agenta]):
             results.append(Nepremicnine(id, lastnik, cena, vrsta, lokacija))
         return results
 
 class Zastopa:
-    def __init__(self,klijent,agent):
-        self.klijent=klijent
+    def __init__(self,klient,agent):
+        self.klient=klient
         self.agent=agent
 
+    @staticmethod
+    def agent_klient(id_klient, id_agent):
+        '''doda klienta agentu'''
+
+        check_sql = """
+            SELECT COUNT(*) FROM zastopa WHERE id_klient = ? AND id_agent = ?;
+        """
+
+        cursor = conn.execute(check_sql, [id_klient, id_agent])
+        count = cursor.fetchone()[0]
+
+        if count == 0:
+            insert_sql = """
+                INSERT INTO zastopa (id_klient, id_agent) VALUES (?, ?);
+            """
+            conn.execute(insert_sql, [id_klient, id_agent])
+            conn.commit()
+
 class Interes:
-    def __init__(self,klijent,nepremicnina):
-        self.klijent=klijent
+    def __init__(self,klient,nepremicnina):
+        self.klient=klient
         self.nepremicnina=nepremicnina
+
+    @staticmethod
+    def dodaj_interes(id_klient):
+        '''Pregleda katere nepremicnine ustrezajo klientu'''
+
+        sql = """
+            INSERT INTO interes (id_klient, id_nepremicnine)
+            SELECT ?, t2.id
+            FROM nepremicnine AS t2
+            JOIN klienti AS t1 ON t1.vrsta = t2.vrsta AND t1.lokacija = t2.lokacija
+            WHERE t1.id = ? AND t1.buget >= t2.cena;
+        """
+        
+        conn.execute(sql, (id_klient, id_klient))
+        conn.commit()
 
 # for item in Nepremicnine.f_manjse_od_cena(200000):
 #     print(item)
 
-# for elt in Agenti.klijenti_agenta(2):
+# for elt in Agenti.klienti_agenta(2):
 #     print(elt)
 # print(Nepremicnine.vse_lokacije())
 
@@ -376,18 +421,18 @@ class Interes:
 # for item in Nepremicnine.f_vrsta_nepremicnine("hisa"):
 #     print(item)
 
-# for elt in Klijenti.agenti(5):
+# for elt in Klienti.agenti(5):
 #     print(elt)
 
-# print(Klijenti)
-# for elt in Klijenti.nepremicnine(2):
+# print(Klienti)
+# for elt in Klienti.nepremicnine(2):
 #     print(elt)
 
-# print(Nepremicnine.klijenti(4))
-# for item in Nepremicnine.klijenti(4):
+# print(Nepremicnine.klienti(4))
+# for item in Nepremicnine.klienti(4):
 #     print(item)
 
-# Klijenti.dodaj_klijenta("ime", "kontakt", 6000, "lokacija", "vrsta")
+# Klienti.dodaj_klienta("ime", "kontakt", 6000, "lokacija", "vrsta")
 #Agenti.dodaj_agenta("neki", "neki", "neki", 1)
 #Nepremicnine.dodaj_nepremicnino("ndki", 90, "hisa", "Tudjemili")
 

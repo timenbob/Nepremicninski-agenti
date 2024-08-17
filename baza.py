@@ -109,19 +109,19 @@ class Agenti(Tabela):
         super().uvozi()
         
         
-class Klijenti(Tabela):
+class Klienti(Tabela):
     """
-    Tabela za klijente.
+    Tabela za kliente.
     """
-    ime = "klijenti"
-    podatki = "podatki/klijenti.csv"
+    ime = "klienti"
+    podatki = "podatki/klienti.csv"
 
     def ustvari(self):
         """
         Ustvari tabelo uporabnik.
         """
         self.conn.execute("""
-            CREATE TABLE klijenti(
+            CREATE TABLE klienti(
             id integer PRIMARY KEY AUTOINCREMENT,
             ime text NOT NULL,
             kontakt text NOT NULL,
@@ -147,7 +147,7 @@ class Klijenti(Tabela):
 
         assert "id" in podatki
         cur = self.conn.execute("""
-            SELECT id FROM klijenti
+            SELECT id FROM klienti
             WHERE id = :id;
         """, podatki)
         r = cur.fetchone()
@@ -211,9 +211,9 @@ class Zastopa(Tabela):
          """
          self.conn.execute("""
              CREATE TABLE zastopa(
-             id_klijent integer REFERENCES klijenti(id),
+             id_klient integer REFERENCES klienti(id),
              id_agent integer REFERENCES agent(id),
-             PRIMARY KEY (id_klijent, id_agent)
+             PRIMARY KEY (id_klient, id_agent)
              );
          """)
          
@@ -224,13 +224,13 @@ class Zastopa(Tabela):
         Argumenti:
         - podatki: slovar s podatki o pripadnosti
         """
-        id_klijent = podatki['id_klijent']
+        id_klient = podatki['id_klient']
         id_agent = podatki['id_agent']
         
         neki = self.conn.execute("""
             SELECT * FROM zastopa  
-            WHERE id_klijent = ? AND id_agent = ? 
-                    """, (id_klijent, id_agent)).fetchone()
+            WHERE id_klient = ? AND id_agent = ? 
+                    """, (id_klient, id_agent)).fetchone()
         
  
         if neki is None:
@@ -238,28 +238,28 @@ class Zastopa(Tabela):
     
 class Interes(Tabela):
     """
-    Tabela kdo zastopa koga - agenti/kljenti.
+    Tabela katere nepremicnine ustrezajo klientu
     """
     ime = "interes"
 
     def ustvari(self):
-        """S
-        Ustvari tabelo uporabnik.
+        """
+        Ustvari tabelo interes.
         """
         self.conn.execute("""
             CREATE TABLE interes(
-            id_klijent integer REFERENCES klijent(id),
+            id_klient integer REFERENCES klient(id),
             id_nepremicnine integer REFERENCES nepremicnine(id),
-            PRIMARY KEY (id_klijent, id_nepremicnine));
+            PRIMARY KEY (id_klient, id_nepremicnine));
             
         """)
         
     
     def napolni(self):
         self.conn.execute("""
-            INSERT INTO interes (id_klijent, id_nepremicnine)
+            INSERT INTO interes (id_klient, id_nepremicnine)
             SELECT t1.id, t2.id
-            FROM klijenti AS t1 JOIN nepremicnine AS t2 
+            FROM klienti AS t1 JOIN nepremicnine AS t2 
             ON t1.vrsta = t2.vrsta AND t1.lokacija = t2.lokacija 
             WHERE t1.buget >= t2.cena;
         """)
@@ -318,11 +318,11 @@ def pripravi_tabele(conn):
     Pripravi objekte za tabele.
     """
     agenti = Agenti(conn)
-    klijenti = Klijenti(conn)
+    klienti = Klienti(conn)
     nepremicnine = Nepremicnine(conn)
     zastopa = Zastopa(conn)
     interes = Interes(conn)
-    return [agenti, klijenti, nepremicnine, zastopa,interes]
+    return [agenti, klienti, nepremicnine, zastopa,interes]
 
 def ustvari_bazo_ce_ne_obstaja(conn):
     """

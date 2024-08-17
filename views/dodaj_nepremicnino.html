@@ -1,34 +1,168 @@
 <!doctype html>
 <html lang="en">
 <head>
+<style>
+        ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+
+
+li a, .dropbtn {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+
+
+li.dropdown {
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1;}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+    </style>
+<style>
+        ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+
+
+li a, .dropbtn {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+
+
+li.dropdown {
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1;}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+    </style>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>dodaj nepremicnino</title>
+    <title>Dodaj nepremičnino</title>
 </head>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Neprimicninski agenti</a>
+            <a class="navbar-brand" href="/domov">Nepremičninski agenti</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
+                % if uporabnik_id == 0:
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn"><a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremičnine</a></a>
+                        <div class="dropdown-content">
+                          <a href="/dodaj-nepremicnino">Dodaj nepremičnine</a>
+                          <a href="/brskaj_nepremicnine">Brskaj nepremičnine</a>
+                          <a href="/vse_nepremicnine">Vse nepremičnine</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn"><a class="btn btn-outline-primary mr-2" href="/klienti_boss">Klienti Boss</a></a>
+                        <div class="dropdown-content">
+                          <a href="/dodaj-klienta">Dodaj klienta</a>
+                          <a href="/vsi-klienti">Vsi klienti</a>
+                          <a href="/select-klienta">Agenti klienta</a>
+                          <a href="/select-klienta-boss">Nepremičnine, ki ustrezajo klientu</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn"><a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a></a>
+                        <div class="dropdown-content">
+                          <a href="/dodaj-agenta">Dodaj agenta</a>
+                          <a href="/klienti_agenta_izbor">Klienti od agenta</a>
+                          <a href="/vsi_agenti">Vsi agenti</a>
+                        </div>
+                    </li>
+
+                % elif uporabnik_id == 1:
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn"><a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremičnine</a></a>
+                    <div class="dropdown-content">
+                      <a href="/dodaj-nepremicnino">Dodaj nepremičnine</a>
+                      <a href="/brskaj_nepremicnine">Brskaj nepremičnine</a>
+                      <a href="/vse_nepremicnine">Vse nepremičnine</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn"><a class="btn btn-outline-primary mr-2" href="/klienti">Klienti</a></a>
+                    <div class="dropdown-content">
+                      <a href="/dodaj-klienta">Dodaj klienta</a>
+                      <a href="/select-klienta-agent">Nepremičnine, ki ustrezajo klientu</a>
+                    </div>
+                </li>
+                % end
+            </div>
+            <div class="d-flex ml-auto" >
                 <form class="d-flex" action="/" method="GET">
                     <button class="btn btn-outline-success">Odjava</button>
                 </form>
                 
             </div>
-            <div class="d-flex ml-auto">
-                % if uporabnik_id == 0:
-                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
-                    <a class="btn btn-outline-primary mr-2" href="/agenti">Agenti</a>
-                    <a class="btn btn-outline-primary mr-2" href="/klijenti_boss">Klijenti Boss</a>
-                % elif uporabnik_id == 1:
-                    <a class="btn btn-outline-primary mr-2" href="/nepremicnine">Nepremicnine</a>
-                    <a class="btn btn-outline-primary mr-2" href="/klijenti">Klijenti</a>
-                % end
-            </div>
+            
         </div>
     </nav>
 </header>
@@ -59,9 +193,12 @@
                     <div class="control">
                         <div class="select">
                             <select name="vrsta" required>
-                                <option value="stanovanje">stanovanje</option>
-                                <option value="hisa">hisa</option>
-                                <option value="zemljisce">zemljisce</option>
+                                <option value="stanovanje">Stanovanje</option>
+                                <option value="hisa">Hiša</option>
+                                <option value="zemljisce">Zemljišče</option>
+                                <option value="igrisce">Igrišče</option>
+                                <option value="blok">Blok</option>
+                                <option value="stolpnica">Stolpnica</option>
                             </select>
                         </div>
                     </div>
