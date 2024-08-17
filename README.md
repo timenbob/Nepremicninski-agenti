@@ -1,45 +1,44 @@
-# Nepremicninski agent
-To je projekt, ki smo ga izdelali pri predmetu Podatkovne baze 1 <br>
-Če želimo pognati projekt poženemo le spletni vmesnik.<br>
-Sam projekt je mišljen za zaposlene v podjetju, ki posluje z nepremičninami.
+# Nepremičninski agent
+Ta projekt smo razvili za predmet Podatkovne baze 1 in je namenjen zaposlenim v podjetju, ki posluje z nepremičninami. Omogoča upravljanje podatkov o agentih, klientih in nepremičninah preko spletnega vmesnika. Glavni cilj projekta je omogočiti agentom in lastnikom podjetja enostaven dostop in analizo podatkov.
 
 ## Shema Baze
 ![Shema baze](https://github.com/timenbob/Nepremicninski-agenti/blob/main/Shema%20Baza.jpg)
 
 ## Opis baze
-Baza vsebuje 6 tabel:
-Agenti, kjer se nahajajo informacije o agentih(id, ime, kontak(katerega se tudi uporabi pri prijavi), geslo, naziv). Naziv je pomemben, saj je odvisno od naziva kaj uporabnik lahko vse vidi.<br>
-Klienti, kjer se nahajajo vse informavije o klientih(id, ime, kontakt, buget, lokacija, vrsta)<br>
-Nepremicnine, kjer so vse informacije o nepremicninah(id, lastnik, cena, vrsta, lokacija)<br>
+Baza podatkov vsebuje šest tabel, ki so med seboj povezane in omogočajo celovito upravljanje podatkov:<br>
+Shranjuje informacije o agentih, vključno z ID-jem, imenom, kontaktnimi podatki (ki se uporabljajo za prijavo), geslom in nazivom. Naziv določa, katere podatke lahko agent vidi in upravlja.<br>
+Klienti: Vsebuje podatke o klientih, kot so ID, ime, kontakt, proračun, lokacija in vrsta nepremičnine, ki jo iščejo.<br>
+Shranjuje podatke o nepremičninah, vključno z ID-jem, lastnikom, ceno, vrsto in lokacijo.<br>
 <br>
-Interes: ta tabela vsebuje podatke o tem katere vse nepremicnine ustrezajo klijenu.<br>
-Zatopa: ta tabela vsebuje podatke o tem katere klienta ima posamezni agent.<br>
+Interes: Vsebuje podatke o tem, katere nepremičnine ustrezajo posameznim klientom.<br>
+Zastopa: Beleži, kateri agent zastopa določenega klienta.<br>
 
 ## Povezave
-Agent ima lahko 0 ali več klijentov.<br>
-Klient(kupec) ima lahko enega ali več agentov.<br>
+Agent ima lahko 0 ali več klientov.<br>
+Klient (kupec) ima lahko enega ali več agentov.<br>
 Klientu lahko ustreza 0 ali več nepremičnin.<br>
-Nepremičnina lahko ustreza 0 ali več klijentom.
+Nepremičnina lahko ustreza 0 ali več klientom.<br>
 
 ## Postopek uporabe
-Prenesemo celoten repozitorij ter poženemo spletni vmesnik. Ko kliknemo Prijava nas
-program vpraša za kontakt ter geslo. Te podatke lahko pridobimo iz baze v tabeli agenti.<br>
-Primer:<br>
-kontakt                geslo<br>
-masch0@lycos.com       password123<br>
-neki@neki.com          password<br>
+Prenesite celoten repozitorij in zaženite spletni vmesnik.<br>
+Ob prijavi v sistem vnesite kontakt in geslo, ki ju najdete v tabeli Agenti.<br>
+Primeri:<br>
+Kontakt: masch0@lycos.com, Geslo: password123 (Agent)<br>
+Kontakt: neki@neki.com, Geslo: password (Lastnik)<br>
+Glede na uporabljene prijavne podatke boste dobili dostop do pogleda agenta ali lastnika.<br>
 
-Če uporabimo prvega bomo pridobili pogled agenta. Če pa uporabimo drugega pa pridobimo pogled lastnika.<br>
-
-### Upravlajnje
+### Upravljanje
 #### Agent
-Ko se vpišemo kot agent, lahko analiziramo vse nepremicnine ter pregledujemo le svoje kliente. Lahko dodajamo agente ter nepremicnine. Ko izberemo kakšne možnosti, da se vrnemo na osnovni meni lahko uporabljamo korake nazaj oziroma v zgodnjem desnem kotu imamo povezave do osnovnoh izbir menija.
-
+Ob prijavi kot agent lahko analizirate nepremičnine in pregledate le svoje kliente.<br>
+Omogočeno je dodajanje novih agentov in nepremičnin.<br>
+Na osnovni meni se lahko vrnete z uporabo gumbov za korake nazaj ali s klikom na povezave v zgornjem desnem kotu.
 #### Lastnik
-Lastnik imal poleg funkcionalnosti agentov tudi druge izbire. Lastnik lahko pregleduje tudi posamezen agente ter ima vpogled v vse kliente.
+Lastnik ima dostop do vseh funkcionalnosti agenta ter dodatne možnosti:<br>
+Pregled vseh agentov.<br>
+Vpogled v vse kliente.
 
 <br>
-Ko prenehate uporabljati program v VisualStudiu, v terminalu kliknite ctrl-C, da se program res zaključi.
+Ko končate z uporabo programa v Visual Studio, pritisnite Ctrl-C v terminalu, da se program ustrezno zaključi.
 
 
 ## Avtorji
