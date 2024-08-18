@@ -171,16 +171,15 @@ li.dropdown {
         <div class="container">
             <h1 class="title" class="text-center" style="margin-top: 70px;">
                 Pozdravljen {{ime_agent}} <br>
-                Izberi max ceno
+                Izberi maksimalno ceno
             </h1>
             <form method="POST" action="/max-cena">
                 <div class="field">
-                    <label class="label">izberi max ceno</label>
                     <div class="control">
                         <div class="field">
-                            <label class="label">Proračun</label>
+                            <label class="label">Proračun:</label>
                             <div class="control">
-                                <input class="input" type="number" placeholder="npr. 500000" name="proračun" required>
+                                <input class="input" type="number" placeholder="npr. 500000" name="budget" required>
                             </div>
                         </div>
                     </div>
