@@ -170,11 +170,6 @@ def agent():
 
 ######################################################################################gor meniji
 
-@bottle.route('/dodaj-klienta')
-def dodaj_klienta():
-    return bottle.template('dodaj_klienta.html',ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),napaka=None,uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
-
-
 @bottle.route('/pregled-nepremicnine')
 def pregled_nepremicnine():
     lokacije = Nepremicnine.vse_lokacije()
@@ -260,12 +255,6 @@ def dodaj_klienta():
 #########################################################gor je dodajanje
 
 #agenti klienta
-@bottle.route('/agenti-klienta/<id_klient:int>')
-def agenti_klienta(id_klient):
-    agenti = Klienti.agenti(id_klient)
-    
-    return bottle.template('agenti_klienta.html', id_klient=id_klient, agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
-
 @bottle.route('/select-klienta')
 def select_klienta():
     
@@ -280,6 +269,12 @@ def handle_select_klienta():
     else:
         return "Noben kupec izbran.", 400
     
+@bottle.route('/agenti-klienta/<id_klient:int>')
+def agenti_klienta(id_klient):
+    agenti = Klienti.agenti(id_klient)
+    
+    return bottle.template('agenti_klienta.html', id_klient=id_klient, agenti=agenti,ime_agent=bottle.request.get_cookie("UpIme",secret=secret_key),uporabnik_id=int(bottle.request.get_cookie("naziv",secret=secret_key)))
+
 #nepremicnine ki lahko zanimajo klienta za agente
 @bottle.route('/select-klienta-agent')
 def select_klienta():

@@ -188,7 +188,11 @@ li.dropdown {
                         <td>{{agent.id}}</td>
                         <td>{{agent.ime}}</td>
                         <td>{{agent.kontakt}}</td>
-                        <td>{{agent.naziv}}</td>
+                        %if agent.naziv == 0:
+                        <td>Lastnik</td>
+                        %else:
+                        <td>Zaposleni</td>
+                        %end
                     </tr>
                     % end
                 </tbody>
