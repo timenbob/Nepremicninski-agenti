@@ -17,6 +17,7 @@ if not os.path.exists('baza.db'):
 
 
 conn = sqlite3.connect('baza.db')
+conn.execute('PRAGMA foreign_keys = ON')
 
 class LoginError(Exception):
     """
